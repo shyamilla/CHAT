@@ -1,0 +1,104 @@
+<div class="max-w-3xl mx-auto mt-10 p-6 bg-white rounded-2xl shadow">
+  <h2 class="text-2xl font-semibold text-center mb-4">🛠 Modify Group</h2>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="text-center text-blue-600 mb-4 animate-pulse">
+    Loading group info...
+  </div>
+
+  <!-- Success / Error Message -->
+  <div *ngIf="message" class="text-center mb-4">
+    <span
+      [class.text-green-600]="message.startsWith('✅')"
+      [class.text-red-600]="message.startsWith('❌')"
+      [class.text-yellow-600]="message.startsWith('⭐')"
+    >
+      {{ message }}
+    </span>
+  </div>
+
+  <!-- Members Section -->
+  <div class="mb-6">
+    <h3 class="text-lg font-semibold mb-2">👥 Current Members</h3>
+    <div *ngIf="members.length === 0" class="text-gray-500">
+      No members in this group yet.
+    </div>
+
+    <ul class="space-y-2">
+      <li
+        *ngFor="let member of members"
+        class="flex justify-between items-center border p-2 rounded-lg"
+      >
+        <div>
+          <span class="font-medium">{{ member }}</span>
+          <span
+            *ngIf="admins.includes(member)"
+            class="ml-2 text-xs text-yellow-600 bg-yellow-100 px-2 py-1 rounded"
+          >
+            Admin
+          </span>
+        </div>
+
+        <div class="flex gap-2">
+          <button
+            (click)="promoteToAdmin(member)"
+            *ngIf="!admins.includes(member)"
+            class="text-sm px-3 py-1 rounded bg-yellow-500 text-white hover:bg-yellow-600 transition"
+          >
+            Promote
+          </button>
+
+          <button
+            (click)="removeMember(member)"
+            class="text-sm px-3 py-1 rounded bg-red-500 text-white hover:bg-red-600 transition"
+          >
+            Remove
+          </button>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Add Members Section -->
+  <div class="mt-6 border-t pt-4">
+    <h3 class="text-lg font-semibold mb-2">➕ Add Members</h3>
+
+    <div *ngIf="users.length === 0" class="text-gray-500">
+      No users available.
+    </div>
+
+    <div
+      class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 max-h-60 overflow-y-auto border p-3 rounded-lg"
+    >
+      <label
+        *ngFor="let user of users"
+        class="flex items-center gap-2 border rounded px-2 py-1 cursor-pointer hover:bg-gray-100"
+      >
+        <input
+          type="checkbox"
+          (change)="onMemberToggle(user.username, $event.target.checked)"
+          [checked]="members.includes(user.username)"
+        />
+        <span class="text-sm">{{ user.username }}</span>
+      </label>
+    </div>
+
+    <button
+      (click)="addMembers()"
+      [disabled]="loading"
+      class="mt-4 w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition disabled:opacity-50"
+    >
+      {{ loading ? 'Adding...' : 'Add Selected Members' }}
+    </button>
+  </div>
+
+  <!-- Back Button -->
+  <div class="text-center mt-6">
+    <button
+      (click)="router.navigate(['/chat-list'])"
+      class="text-gray-600 hover:text-blue-600 transition"
+    >
+      ← Back to Chats
+    </button>
+  </div>
+</div>
