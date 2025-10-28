@@ -34,17 +34,20 @@ public class ChatService {
         this.jwtUtils = jwtUtils;
     }
 
-    // ✅ CREATE GROUP (with security + clean usernames)
-    public ChatRoom createGroup(String groupName, String creatorUsername, List<String> memberInputs) {
-        if (creatorUsername == null || creatorUsername.isBlank()) {
-            throw new RuntimeException("Creator username is required.");
+    // ✅ CREATE GROUP (supports creator as email or username)
+    public ChatRoom createGroup(String groupName, String creatorIdentifier, List<String> memberInputs) {
+        if (creatorIdentifier == null || creatorIdentifier.isBlank()) {
+            throw new RuntimeException("Creator username/email is required.");
         }
 
-        // 🧩 Validate creator exists
-        userRepository.findByUsername(creatorUsername)
-                .orElseThrow(() -> new RuntimeException("Creator not found: " + creatorUsername));
+        // 🔍 Try to find creator by email or username
+        User creator = userRepository.findByEmail(creatorIdentifier)
+                .or(() -> userRepository.findByUsername(creatorIdentifier))
+                .orElseThrow(() -> new RuntimeException("Creator not found: " + creatorIdentifier));
 
-        // 👥 Initialize member & admin sets
+        String creatorUsername = creator.getUsername();
+
+        // 👥 Initialize members (add creator)
         Set<String> members = new HashSet<>();
         members.add(creatorUsername);
 
@@ -52,7 +55,7 @@ public class ChatService {
             for (String input : memberInputs) {
                 if (input == null || input.isBlank()) continue;
 
-                // If user entered an email, map to username
+                // Convert email -> username if necessary
                 String username = input.contains("@")
                         ? fetchUsernameByEmailOrNull(input)
                         : input;
@@ -67,7 +70,7 @@ public class ChatService {
         Set<String> admins = new HashSet<>();
         admins.add(creatorUsername);
 
-        // 🧱 Build new chat room
+        // 🧱 Build chat room
         ChatRoom room = new ChatRoom();
         room.setName(groupName);
         room.setAdmins(new ArrayList<>(admins));
@@ -75,7 +78,8 @@ public class ChatService {
 
         ChatRoom saved = chatRoomRepository.save(room);
         System.out.println("✅ Group created: " + saved.getName() + " by " + creatorUsername);
-        System.out.println("📋 Members: " + saved.getMembers());
+        System.out.println("📋 Admins: " + saved.getAdmins());
+        System.out.println("👥 Members: " + saved.getMembers());
 
         // 🔔 Notify all members in real-time
         broadcastGroupUpdate(saved);

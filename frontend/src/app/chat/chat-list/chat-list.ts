@@ -74,7 +74,7 @@ export class ChatListComponent implements OnInit, OnDestroy {
   }
 
   openChat(roomId: string) {
-    this.router.navigate(['/chat', roomId]);
+    this.router.navigate(['/chats/chat', roomId]);
   }
 
   // ✅ Start DM between two users
@@ -88,13 +88,13 @@ export class ChatListComponent implements OnInit, OnDestroy {
     };
     this.chat.createGroup(payload).subscribe({
       next: (room) => {
-        this.router.navigate(['/chat', room.id]);
+        this.router.navigate(['/chats/chat', room.id]);
       },
       error: (err) => console.error(err)
     });
   }
 
-  createGroupManual() {
+  createGroupManual() { 
     this.router.navigate(['/chats/create-group']);
   }
 

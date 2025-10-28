@@ -4,6 +4,7 @@ import com.application.chat.dtos.CreateGroupDTO;
 import com.application.chat.dtos.ModifyGroupDTO;
 import com.application.chat.models.ChatRoom;
 import com.application.chat.services.ChatService;
+import com.application.chat.config.JwtUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
@@ -16,18 +17,40 @@ public class ChatController {
 
     private final ChatService chatService;
     private final SimpMessagingTemplate messagingTemplate;
+    private final JwtUtils jwtUtils;
 
-    public ChatController(ChatService chatService, SimpMessagingTemplate messagingTemplate) {
+    public ChatController(ChatService chatService, SimpMessagingTemplate messagingTemplate, JwtUtils jwtUtils) {
         this.chatService = chatService;
         this.messagingTemplate = messagingTemplate;
+        this.jwtUtils = jwtUtils;
     }
 
-    // ✅ CREATE GROUP (now uses usernames)
+    // ✅ CREATE GROUP (username extracted securely from JWT)
     @PostMapping("/create")
-    public ResponseEntity<ChatRoom> createGroup(@RequestBody CreateGroupDTO dto) {
-        System.out.println("🟢 Creating new group: " + dto.getName() + " by " + dto.getCreatorUsername());
+    public ResponseEntity<ChatRoom> createGroup(
+            @RequestBody CreateGroupDTO dto,
+            @RequestHeader("Authorization") String authHeader
+    ) {
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            System.err.println("❌ Missing or invalid Authorization header.");
+            return ResponseEntity.status(401).build();
+        }
 
-        ChatRoom room = chatService.createGroup(dto.getName(), dto.getCreatorUsername(), dto.getMemberUsernames());
+        // 🔐 Extract username from JWT token
+        String token = authHeader.substring(7);
+        String creatorUsername = jwtUtils.extractUsername(token);
+        // The method extractUsername(String) is undefined for the type JwtUtilsJava(67108964)
+
+
+        if (creatorUsername == null || creatorUsername.isBlank()) {
+            System.err.println("❌ Invalid JWT: unable to extract username.");
+            return ResponseEntity.status(401).build();
+        }
+
+        System.out.println("🟢 Creating new group: " + dto.getName() + " by " + creatorUsername);
+
+        // ✅ Create group with creator automatically added as admin + member
+        ChatRoom room = chatService.createGroup(dto.getName(), creatorUsername, dto.getMemberUsernames());
 
         // ✅ Notify all members + admins in real-time (via WebSocket)
         try {

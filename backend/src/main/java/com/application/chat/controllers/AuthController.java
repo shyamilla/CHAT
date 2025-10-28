@@ -58,23 +58,32 @@ public class AuthController {
 
     // ==================== LOGIN ====================
     @PostMapping("/login")
-    public ResponseEntity<Map<String, String>> login(@RequestBody LoginDTO dto) {
-        Map<String, String> response = new HashMap<>();
-        try {
-            Authentication auth = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(dto.getEmail(), dto.getPassword()));
+public ResponseEntity<Map<String, Object>> login(@RequestBody LoginDTO dto) {
+    Map<String, Object> response = new HashMap<>();
+    try {
+        Authentication auth = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(dto.getEmail(), dto.getPassword()));
 
-            String token = jwtUtils.generateJwtToken(dto.getEmail());
-            response.put("token", token);
-            response.put("message", "Login successful");
+        // ✅ Fetch full user
+        User user = userService.findByEmail(dto.getEmail())
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
-            return ResponseEntity.ok(response);
+        // ✅ Generate JWT token using email
+        String token = jwtUtils.generateJwtToken(dto.getEmail());
 
-        } catch (AuthenticationException e) {
-            response.put("error", "Invalid email or password");
-            return ResponseEntity.status(401).body(response);
-        }
+        response.put("token", token);
+        response.put("username", user.getUsername()); // 👈 add this
+        response.put("email", user.getEmail());
+        response.put("message", "Login successful");
+
+        return ResponseEntity.ok(response);
+
+    } catch (AuthenticationException e) {
+        response.put("error", "Invalid email or password");
+        return ResponseEntity.status(401).body(response);
     }
+}
+
 
     // ==================== FORGOT PASSWORD ====================
     @PostMapping("/forgot")

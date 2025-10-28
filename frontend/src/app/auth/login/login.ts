@@ -49,14 +49,15 @@ export class LoginComponent {
         next: (res) => {
           if (res?.token) {
             this.auth.saveToken(res.token);
+            if (res.username) {
+              localStorage.setItem('username', res.username); // 👈 save username
+            }
             this.router.navigate(['/chats']);
           } else {
             this.error = res?.message ?? 'Unexpected response from server';
           }
         },
-        error: (err) => {
-          this.error = err?.error?.error ?? 'Invalid email or password';
-        },
+
       });
   }
 }

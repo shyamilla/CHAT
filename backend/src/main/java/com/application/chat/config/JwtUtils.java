@@ -64,4 +64,9 @@ public class JwtUtils {
     public SecretKey getSecretKey() {
         return secretKey;
     }
+
+    // ✅ Helper for cleaner naming
+    public String extractUsername(String token) {
+        return getEmailFromJwtToken(token);
+    }
 }
