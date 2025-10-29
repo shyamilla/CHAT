@@ -1,92 +1,70 @@
-.chat-list-container {
-  max-width: 600px;
-  margin: 2rem auto;
-  background: #fff;
-  border-radius: 12px;
-  padding: 1.5rem;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+.chat-container {
+  padding: 16px;
+  max-width: 700px;
+  margin: 0 auto;
 }
 
-h2 {
-  text-align: center;
-  margin-bottom: 1rem;
-  color: #333;
+.chat-title {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 16px;
 }
 
-.loading,
-.error,
-.empty {
-  text-align: center;
-  margin-top: 2rem;
-  font-size: 1rem;
+.search-section {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
 }
 
-.error {
-  color: #c0392b;
+.search-input {
+  flex: 1;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
 }
 
-.retry-btn {
-  margin-left: 1rem;
-  background: #e74c3c;
+.create-group-btn {
+  background-color: #007bff;
   color: white;
+  padding: 8px 12px;
   border: none;
   border-radius: 6px;
-  padding: 0.4rem 0.8rem;
   cursor: pointer;
+  transition: background-color 0.2s;
 }
 
-.empty p {
-  margin-bottom: 0.8rem;
-  color: #777;
+.create-group-btn:hover {
+  background-color: #0056b3;
 }
 
-.create-btn,
-.new-btn {
-  display: inline-block;
-  background: #2ecc71;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  padding: 0.6rem 1rem;
-  cursor: pointer;
-  transition: background 0.2s ease;
+.search-results {
+  background-color: #f4f4f4;
+  border-radius: 6px;
+  padding: 8px;
+  margin-bottom: 16px;
 }
 
-.create-btn:hover,
-.new-btn:hover {
-  background: #27ae60;
-}
-
-.chat-list {
-  list-style: none;
-  padding: 0;
-  margin: 1rem 0;
-}
-
-.chat-list li {
-  padding: 0.8rem 1rem;
-  border-bottom: 1px solid #eee;
-  cursor: pointer;
-  transition: background 0.2s ease;
-}
-
-.chat-list li:hover {
-  background: #f7f9fc;
-}
-
-.chat-name {
+.section-title {
   font-weight: 600;
-  color: #333;
+  margin-bottom: 8px;
 }
 
-.chat-meta {
-  font-size: 0.9rem;
-  color: #666;
-  display: flex;
-  justify-content: space-between;
+.user-item,
+.chat-item {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+  cursor: pointer;
+  border-radius: 4px;
 }
 
-.footer {
+.user-item:hover,
+.chat-item:hover {
+  background-color: #f1f1f1;
+}
+
+.no-chats {
   text-align: center;
-  margin-top: 1.5rem;
+  color: #666;
+  margin-top: 20px;
 }

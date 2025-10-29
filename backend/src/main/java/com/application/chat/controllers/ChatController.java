@@ -10,6 +10,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/chats")
@@ -29,8 +30,7 @@ public class ChatController {
     @PostMapping("/create")
     public ResponseEntity<ChatRoom> createGroup(
             @RequestBody CreateGroupDTO dto,
-            @RequestHeader("Authorization") String authHeader
-    ) {
+            @RequestHeader("Authorization") String authHeader) {
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             System.err.println("❌ Missing or invalid Authorization header.");
             return ResponseEntity.status(401).build();
@@ -39,8 +39,8 @@ public class ChatController {
         // 🔐 Extract username from JWT token
         String token = authHeader.substring(7);
         String creatorUsername = jwtUtils.extractUsername(token);
-        // The method extractUsername(String) is undefined for the type JwtUtilsJava(67108964)
-
+        // The method extractUsername(String) is undefined for the type
+        // JwtUtilsJava(67108964)
 
         if (creatorUsername == null || creatorUsername.isBlank()) {
             System.err.println("❌ Invalid JWT: unable to extract username.");
@@ -62,8 +62,7 @@ public class ChatController {
                 messagingTemplate.convertAndSendToUser(
                         user,
                         "/topic/updates",
-                        "GROUP_CREATED:" + room.getName()
-                );
+                        "GROUP_CREATED:" + room.getName());
             });
         } catch (Exception e) {
             System.err.println("⚠️ Failed to broadcast new group: " + e.getMessage());
@@ -109,4 +108,19 @@ public class ChatController {
         ChatRoom updated = chatService.assignAdmin(groupId, adminUsername, newAdminUsername);
         return ResponseEntity.ok(updated);
     }
+
+    // ✅ GET GROUP DETAILS BY ID (used by frontend to show room name)
+    @GetMapping("/groups/{groupId}")
+    public ResponseEntity<?> getGroupDetails(@PathVariable String groupId) {
+        var room = chatService.getGroupById(groupId);
+        if (room == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(Map.of(
+                "id", room.getId(),
+                "name", room.getName(),
+                "members", room.getMembers(),
+                "admins", room.getAdmins()));
+    }
+
 }

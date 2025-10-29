@@ -23,10 +23,10 @@ public class ChatService {
     private final JwtUtils jwtUtils;
 
     public ChatService(ChatRoomRepository chatRoomRepository,
-                       ChatMessageRepository chatMessageRepository,
-                       UserRepository userRepository,
-                       SimpMessagingTemplate messagingTemplate,
-                       JwtUtils jwtUtils) {
+            ChatMessageRepository chatMessageRepository,
+            UserRepository userRepository,
+            SimpMessagingTemplate messagingTemplate,
+            JwtUtils jwtUtils) {
         this.chatRoomRepository = chatRoomRepository;
         this.chatMessageRepository = chatMessageRepository;
         this.userRepository = userRepository;
@@ -53,7 +53,8 @@ public class ChatService {
 
         if (memberInputs != null && !memberInputs.isEmpty()) {
             for (String input : memberInputs) {
-                if (input == null || input.isBlank()) continue;
+                if (input == null || input.isBlank())
+                    continue;
 
                 // Convert email -> username if necessary
                 String username = input.contains("@")
@@ -100,7 +101,8 @@ public class ChatService {
 
         Set<String> newMembers = new HashSet<>();
         for (String input : inputs) {
-            if (input == null || input.isBlank()) continue;
+            if (input == null || input.isBlank())
+                continue;
 
             String username = input.contains("@")
                     ? fetchUsernameByEmailOrNull(input)
@@ -146,8 +148,7 @@ public class ChatService {
         messagingTemplate.convertAndSendToUser(
                 memberToRemove,
                 "/topic/updates",
-                "You were removed from group " + group.getName()
-        );
+                "You were removed from group " + group.getName());
 
         return updated;
     }
@@ -189,26 +190,26 @@ public class ChatService {
 
     // ✅ Broadcast updates
     private void broadcastGroupUpdate(ChatRoom group) {
-        group.getMembers().forEach(member ->
-                messagingTemplate.convertAndSendToUser(
-                        member,
-                        "/topic/updates",
-                        "Group updated: " + group.getName()
-                )
-        );
+        group.getMembers().forEach(member -> messagingTemplate.convertAndSendToUser(
+                member,
+                "/topic/updates",
+                "Group updated: " + group.getName()));
     }
 
     // ✅ Helper: Get username from email if needed
     private String fetchUsernameByEmailOrNull(String email) {
-        if (email == null) return null;
+        if (email == null)
+            return null;
         return userRepository.findByEmail(email)
                 .map(User::getUsername)
                 .orElse(null);
     }
 
     // ✅ Helper: Fetch group safely
-    private ChatRoom getGroupById(String id) {
+    public ChatRoom getGroupById(String id) {
         return chatRoomRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Group not found: " + id));
     }
+
+
 }

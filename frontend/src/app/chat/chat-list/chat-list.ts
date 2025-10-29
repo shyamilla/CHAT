@@ -11,7 +11,8 @@ import { WsService } from '../../core/services/chat-socket';
   selector: 'app-chat-list',
   standalone: true,
   imports: [CommonModule, RouterModule, ReactiveFormsModule, HttpClientModule],
-  templateUrl: './chat-list.html'
+  templateUrl: './chat-list.html',
+  styleUrl: './chat-list.css'
 })
 export class ChatListComponent implements OnInit, OnDestroy {
   chats: any[] = [];
@@ -87,7 +88,7 @@ export class ChatListComponent implements OnInit, OnDestroy {
     // check error at this place, upon click on this, the page is redirected to login.
     if (!this.username) return;
     const name = `${[ otherUsername].sort().join('-')}`; 
-    const payload = {
+    const payload = { 
       name,
       creatorUsername: this.username,
       memberUsernames: [otherUsername]

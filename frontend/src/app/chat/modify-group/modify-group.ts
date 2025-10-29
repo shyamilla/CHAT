@@ -9,7 +9,8 @@ import { HttpClientModule } from '@angular/common/http';
   selector: 'app-modify-group',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, HttpClientModule],
-  templateUrl: './modify-group.html'
+  templateUrl: './modify-group.html',
+  styleUrl: './modify-group.css'
 })
 export class ModifyGroupComponent implements OnInit {
   groupId = '';

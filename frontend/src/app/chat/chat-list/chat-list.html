@@ -1,25 +1,29 @@
-<div class="p-4 max-w-3xl mx-auto">
-  <h2 class="text-xl font-bold mb-4">Chats</h2>
+<div class="chat-container">
+  <h2 class="chat-title">Chats</h2>
 
   <!-- Search Users -->
-  <form [formGroup]="searchForm" class="mb-4">
+  <form [formGroup]="searchForm" class="search-section">
     <input
       type="text"
       formControlName="query"
       placeholder="🔍 Search users to chat..."
-      class="w-full border rounded-lg p-2"
+      class="search-input"
     />
+
+    <!-- Always visible Create Group button -->
+    <button type="button" class="create-group-btn" (click)="createGroupManual()">
+      ➕ Create Group
+    </button>
   </form>
 
   <!-- Search Results -->
-  <div *ngIf="users.length > 0" class="mb-4 bg-gray-100 rounded-lg p-2">
-    <p class="font-semibold mb-2">Start a new chat:</p>
+  <div *ngIf="users.length > 0" class="search-results">
+    <p class="section-title">Start a new chat:</p>
     <ul>
       <li
-      
         *ngFor="let user of users"
         (click)="startDirectChat(user.username)"
-        class="p-2 hover:bg-gray-200 cursor-pointer rounded"
+        class="user-item"
       >
         {{ user.username }}
       </li>
@@ -28,12 +32,12 @@
 
   <!-- Chat List -->
   <div *ngIf="chats.length > 0; else noChats">
-    <p class="font-semibold mb-2">Your Chats</p>
+    <p class="section-title">Your Chats</p>
     <ul>
       <li
         *ngFor="let chat of chats"
         (click)="openChat(chat.id)"
-        class="p-3 border-b cursor-pointer hover:bg-gray-50"
+        class="chat-item"
       >
         💬 {{ chat.name }}
       </li>
@@ -41,14 +45,8 @@
   </div>
 
   <ng-template #noChats>
-    <div class="text-center text-gray-600">
+    <div class="no-chats">
       <p>No chats yet.</p>
-      <button
-        class="bg-blue-500 text-white px-4 py-2 rounded mt-3"
-        (click)="createGroupManual()"
-      >
-        ➕ Create Group
-      </button>
     </div>
   </ng-template>
 </div>

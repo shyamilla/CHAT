@@ -9,7 +9,8 @@ import { HttpClientModule } from '@angular/common/http';
   selector: 'app-create-group',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, HttpClientModule],
-  templateUrl: './create-group.html'
+  templateUrl: './create-group.html',
+  styleUrl: './create-group.css'
 })
 export class CreateGroupComponent implements OnInit {
   users: any[] = [];
