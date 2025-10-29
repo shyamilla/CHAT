@@ -74,13 +74,13 @@ export class ChatListComponent implements OnInit, OnDestroy {
   }
 
   openChat(roomId: string) {
-    this.router.navigate(['/chats/chat', roomId]);
+    this.router.navigate(['/chats/rooms/{username}', roomId]);
   }
 
   // ✅ Start DM between two users
   startDirectChat(otherUsername: string) {
     if (!this.username) return;
-    const name = `DM:${[this.username, otherUsername].sort().join('-')}`;
+    const name = `${[ otherUsername].sort().join('-')}`; 
     const payload = {
       name,
       creatorUsername: this.username,
