@@ -1,20 +1,25 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import Stomp from 'stompjs';
 import SockJS from 'sockjs-client';
 import { environment } from '../../../environments/environment';
+import { AuthService } from '../services/auth';
+
 
 @Injectable({ providedIn: 'root' })
 export class WsService {
   private stompClient: Stomp.Client | null = null;
   private connected = false;
-  private apiWsUrl = `${environment.apiUrl.replace('/api', '')}/ws`; 
+  private apiWsUrl = `${environment.wsUrl}`; 
   private connectPromise: Promise<void> | null = null;
+
+    authService = inject(AuthService);
 
   // ✅ Connect returns a Promise to ensure connection readiness
   connect(token?: string): Promise<void> {
     if (this.connected) return Promise.resolve();
     if (this.connectPromise) return this.connectPromise;
-
+    console.log(token);
+    
     this.connectPromise = new Promise((resolve, reject) => {
       const socket = new SockJS(this.apiWsUrl);
       this.stompClient = Stomp.over(socket);
@@ -74,13 +79,20 @@ export class WsService {
   }
 
   // ✅ Wait for connection before sending message
-  async sendMessage(destination: string, body: any) {
+    async sendMessage(destination: string, body: any) {
     await this.connect();
     if (!this.stompClient || !this.connected) {
       console.warn('⚠️ WebSocket not connected. Message not sent.');
       return;
     }
-    this.stompClient.send(destination, {}, JSON.stringify(body));
+
+    
+    const token = this.authService.getToken();
+    const headers: any = {};
+
+    if (token) headers['Authorization'] = `Bearer ${token}`;
+
+    this.stompClient.send(destination, headers, JSON.stringify(body));
     console.log(`📨 Sent message to ${destination}`);
   }
 }

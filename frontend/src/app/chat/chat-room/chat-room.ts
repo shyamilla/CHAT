@@ -37,7 +37,7 @@ export class ChatRoomComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.roomId = this.route.snapshot.paramMap.get('roomId') ?? '';
+    this.roomId = this.route.snapshot.paramMap.get('id') ?? '';
 
     if (!this.roomId) {
       console.error('No roomId found in route');

@@ -23,7 +23,7 @@ export const routes: Routes = [
   { path: 'reset-password', component: ResetPasswordComponent },
 
   { path: 'chats', component: ChatListComponent, canActivate: [AuthGuard] },
-  { path: 'chats/room/:id', component: ChatRoomComponent, canActivate: [AuthGuard] },
+  { path: 'chats/rooms/:id', component: ChatRoomComponent, canActivate: [AuthGuard] },
   { path: 'chats/create-group', component: CreateGroupComponent, canActivate: [AuthGuard] },
   { path: 'chats/modify-group/:id', component: ModifyGroupComponent, canActivate: [AuthGuard] },
 

@@ -74,7 +74,7 @@ export class ChatListComponent implements OnInit, OnDestroy {
   }
 
   openChat(roomId: string) {
-    this.router.navigate(['/chats/rooms/{username}', roomId]);
+    this.router.navigate(['/chats/rooms', roomId]);
   }
 
   // ✅ Start DM between two users
