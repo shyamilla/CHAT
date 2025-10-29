@@ -58,7 +58,11 @@ export class ChatListComponent implements OnInit, OnDestroy {
           return;
         }
         this.chat.searchUsers(v).subscribe({
-          next: (res) => (this.users = res || []),
+          next: (res) => {
+            (this.users = res || []);
+            console.log(this.users);
+            
+          },
           error: (err) => console.error(err)
         });
       });
@@ -79,6 +83,8 @@ export class ChatListComponent implements OnInit, OnDestroy {
 
   // ✅ Start DM between two users
   startDirectChat(otherUsername: string) {
+
+    // check error at this place, upon click on this, the page is redirected to login.
     if (!this.username) return;
     const name = `${[ otherUsername].sort().join('-')}`; 
     const payload = {
@@ -88,9 +94,14 @@ export class ChatListComponent implements OnInit, OnDestroy {
     };
     this.chat.createGroup(payload).subscribe({
       next: (room) => {
-        this.router.navigate(['/chats/chat', room.id]);
+        console.log(room);
+        this.router.navigate(['/chats/rooms/', room.id]);
       },
-      error: (err) => console.error(err)
+      error: (err) => {
+        console.error(err)
+        console.log(err);
+        
+      }
     });
   }
 

@@ -16,6 +16,7 @@
     <p class="font-semibold mb-2">Start a new chat:</p>
     <ul>
       <li
+      
         *ngFor="let user of users"
         (click)="startDirectChat(user.username)"
         class="p-2 hover:bg-gray-200 cursor-pointer rounded"
