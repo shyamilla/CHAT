@@ -95,4 +95,22 @@ export class WsService {
     this.stompClient.send(destination, headers, JSON.stringify(body));
     console.log(`📨 Sent message to ${destination}`);
   }
+
+
+  // *******
+
+  subscribePrivate(callback: (msg: any) => void) {
+  if (!this.stompClient) return;
+  this.stompClient.subscribe('/user/queue/private', (msg) => {
+    const data = JSON.parse(msg.body);
+    callback(data);
+  });
+}
+
+sendPrivate(message: any) {
+  if (this.stompClient && this.connected) {
+    this.stompClient.send('/app/chat.private', {}, JSON.stringify(message));
+  }
+}
+
 }

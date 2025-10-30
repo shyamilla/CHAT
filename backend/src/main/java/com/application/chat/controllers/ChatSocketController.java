@@ -42,6 +42,32 @@ public class ChatSocketController {
         }
     }
 
+
+    @MessageMapping("/chat.private")
+public void sendPrivateMessage(@Payload ChatMessage message,
+                               @Header("Authorization") String authHeader) {
+    try {
+        System.out.println("[WS] Private message received between users.");
+
+        message.setTimestamp(Instant.now());
+        chatService.saveMessage(message.getRoomId(), message.getSenderUsername(), message.getContent());
+
+        // Assume roomId = generated unique id between two usernames (sorted)
+        String receiver = message.getRoomId().replace(message.getSenderUsername(), "").replace("_", "");
+
+        // Send only to receiver (using user destination prefix)
+        messagingTemplate.convertAndSendToUser(receiver, "/queue/private", message);
+
+        // Also send to sender for confirmation
+        messagingTemplate.convertAndSendToUser(message.getSenderUsername(), "/queue/private", message);
+
+        System.out.println("[WS] Sent private message to " + receiver);
+    } catch (Exception e) {
+        System.err.println("[WS] Error in private message: " + e.getMessage());
+    }
+}
+
+
     /**
      * Optionally, handle “user typing” or other events in the future.
      */

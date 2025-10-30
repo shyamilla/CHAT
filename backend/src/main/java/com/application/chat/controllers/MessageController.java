@@ -2,6 +2,7 @@ package com.application.chat.controllers;
 
 import com.application.chat.dtos.ChatMessageDTO;
 import com.application.chat.models.ChatMessage;
+import com.application.chat.models.ChatRoom;
 import com.application.chat.services.ChatService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,4 +32,17 @@ public class MessageController {
     public ResponseEntity<List<ChatMessage>> getMessages(@PathVariable String roomId) {
         return ResponseEntity.ok(chatService.getMessages(roomId));
     }
+
+    // ✅ NEW: Get or create private chat messages between two users
+    @GetMapping("/private/{userA}/{userB}")
+    public ResponseEntity<List<ChatMessage>> getPrivateMessages(
+            @PathVariable String userA,
+            @PathVariable String userB) {
+
+        ChatRoom room = chatService.getOrCreatePrivateChat(userA, userB); // returns ChatRoom
+        List<ChatMessage> messages = chatService.getMessages(room.getId()); // use room.getId()
+
+        return ResponseEntity.ok(messages);
+    }
+
 }

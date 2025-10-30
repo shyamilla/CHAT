@@ -1,7 +1,7 @@
 <div class="chat-container">
   <h2 class="chat-title">Chats</h2>
 
-  <!-- Search Users -->
+  <!-- 🔍 Search Users -->
   <form [formGroup]="searchForm" class="search-section">
     <input
       type="text"
@@ -16,7 +16,7 @@
     </button>
   </form>
 
-  <!-- Search Results -->
+  <!-- 🧑 Search Results -->
   <div *ngIf="users.length > 0" class="search-results">
     <p class="section-title">Start a new chat:</p>
     <ul>
@@ -25,25 +25,38 @@
         (click)="startDirectChat(user.username)"
         class="user-item"
       >
-        {{ user.username }}
+        👤 {{ user.username }}
       </li>
     </ul>
   </div>
 
-  <!-- Chat List -->
-  <div *ngIf="chats.length > 0; else noChats">
+  <!-- 💬 Combined Chat List -->
+  <div *ngIf="chats.length > 0; else noChats" class="chat-list-section">
     <p class="section-title">Your Chats</p>
-    <ul>
+    <ul class="chat-list">
       <li
         *ngFor="let chat of chats"
-        (click)="openChat(chat.id)"
         class="chat-item"
+        (click)="openChat(chat)"
       >
-        💬 {{ chat.name }}
+        <!-- ✅ Show correct name -->
+        <span>
+          {{ chat.isPrivate ? '👤 ' + chat.displayName : '💬 ' + chat.name }}
+        </span>
+
+        <!-- 🗑 Delete button -->
+        <button
+          class="delete-btn"
+          (click)="deleteChat(chat, $event)"
+          title="Delete chat"
+        >
+          🗑
+        </button>
       </li>
     </ul>
   </div>
 
+  <!-- 💤 No Chats -->
   <ng-template #noChats>
     <div class="no-chats">
       <p>No chats yet.</p>

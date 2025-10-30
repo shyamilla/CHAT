@@ -123,4 +123,38 @@ public class ChatController {
                 "admins", room.getAdmins()));
     }
 
+    // ---------------- PRIVATE CHAT ENDPOINTS ----------------
+
+    /**
+     * Create or get a private DM between authenticated user and `otherUsername`.
+     * Authenticated username is extracted from JWT header.
+     */
+    @PostMapping("/private/{otherUsername}")
+    public ResponseEntity<ChatRoom> createOrGetPrivate(
+            @PathVariable String otherUsername,
+            @RequestHeader("Authorization") String authHeader) {
+
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            return ResponseEntity.status(401).build();
+        }
+        String token = authHeader.substring(7);
+        String me = jwtUtils.extractUsername(token); // reuse your jwt utility method
+
+        if (me == null || me.isBlank())
+            return ResponseEntity.status(401).build();
+
+        ChatRoom room = chatService.getOrCreatePrivateChat(me, otherUsername);
+        return ResponseEntity.ok(room);
+    }
+
+    /**
+     * Get private chats for a given username (used by frontend to show DMs).
+     */
+    @GetMapping("/private/rooms/{username}")
+public ResponseEntity<List<Map<String, Object>>> getPrivateRooms(@PathVariable String username) {
+    List<Map<String, Object>> rooms = chatService.getPrivateChatsForUser(username);
+    return ResponseEntity.ok(rooms);
+}
+
+
 }

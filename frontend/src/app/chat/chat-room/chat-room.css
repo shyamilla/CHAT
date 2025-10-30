@@ -1,47 +1,157 @@
-.chat-room {
+/* === Background Container === */
+.chatroom-container {
   display: flex;
   flex-direction: column;
-  height: 100%;
-  max-width: 700px;
-  margin: auto;
+  height: 100vh;
+  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+  color: #fff;
+  font-family: "Poppins", sans-serif;
 }
 
-.messages {
+/* === Header === */
+.chatroom-header {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(10px);
+  padding: 20px 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 500;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.chatroom-header h2 {
+  background: linear-gradient(90deg, #00ff88, #7f00ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-size: 1.3rem;
+}
+
+.chatroom-header span {
+  color: #cfd8dc;
+  font-size: 0.9rem;
+}
+
+/* === Messages Container === */
+.chatroom-messages {
   flex: 1;
   overflow-y: auto;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  padding: 1rem;
-  background: #fafafa;
-}
-
-.messages div {
-  margin: 0.3rem 0;
-}
-
-.messages div.self {
-  text-align: right;
-  color: #1976d2;
-}
-
-.input-box {
+  padding: 25px;
   display: flex;
-  margin-top: 1rem;
+  flex-direction: column;
+  gap: 15px;
+  background: rgba(255, 255, 255, 0.05);
 }
 
-.input-box input {
+.loading,
+.no-messages {
+  text-align: center;
+  color: #aaa;
+  font-size: 1rem;
+  margin-top: 20px;
+}
+
+/* === Message Bubbles === */
+.message-sent,
+.message-received {
+  display: flex;
+}
+
+.message-sent {
+  justify-content: flex-end;
+}
+
+.message-received {
+  justify-content: flex-start;
+}
+
+.message-bubble {
+  max-width: 70%;
+  padding: 12px 16px;
+  border-radius: 20px;
+  word-wrap: break-word;
+  animation: fadeIn 0.4s ease;
+}
+
+.message-sent .message-bubble {
+  background: linear-gradient(90deg, #00ff88, #7f00ff);
+  color: #fff;
+  border-bottom-right-radius: 5px;
+}
+
+.message-received .message-bubble {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-bottom-left-radius: 5px;
+}
+
+.message-meta {
+  font-size: 0.75rem;
+  opacity: 0.8;
+  margin-top: 6px;
+}
+
+/* === Message Input Section === */
+.chatroom-input {
+  display: flex;
+  align-items: center;
+  padding: 15px 25px;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.chatroom-input input {
   flex: 1;
-  padding: 0.5rem;
-  border-radius: 5px;
-  border: 1px solid #aaa;
+  padding: 12px 18px;
+  border: none;
+  border-radius: 25px;
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+  outline: none;
+  transition: all 0.3s ease;
 }
 
-.input-box button {
-  margin-left: 8px;
-  padding: 0.5rem 1rem;
+.chatroom-input input::placeholder {
+  color: #ccc;
+}
+
+.chatroom-input input:focus {
+  background: rgba(255, 255, 255, 0.25);
+  box-shadow: 0 0 10px #00ff88;
+}
+
+.chatroom-input button {
+  margin-left: 15px;
+  padding: 10px 25px;
+  background: linear-gradient(90deg, #00ff88, #7f00ff);
   border: none;
-  background-color: #1976d2;
+  border-radius: 25px;
   color: white;
-  border-radius: 5px;
+  font-weight: 600;
   cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.chatroom-input button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 10px rgba(127, 0, 255, 0.7);
+}
+
+.chatroom-input button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* === Animations === */
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

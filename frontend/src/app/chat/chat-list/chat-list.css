@@ -1,70 +1,163 @@
+/* === Background === */
 .chat-container {
-  padding: 16px;
-  max-width: 700px;
-  margin: 0 auto;
-}
-
-.chat-title {
-  font-size: 20px;
-  font-weight: bold;
-  margin-bottom: 16px;
-}
-
-.search-section {
+  min-height: 55vh;
+  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 8px;
-  margin-bottom: 16px;
+  padding: 150px 20px;
+  color: #fff;
+  font-family: "Poppins", sans-serif;
 }
 
+/* === Title === */
+.chat-title {
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 25px;
+  text-align: center;
+  background: linear-gradient(to right, #7f00ff, #00ff88);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* === Card Containers === */
+.search-section,
+.search-results,
+ul {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(8px);
+  border-radius: 20px;
+  padding: 20px;
+  width: 100%;
+  max-width: 600px;
+  margin-bottom: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.search-section:hover,
+.search-results:hover,
+ul:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+}
+
+/* === Search Input === */
 .search-input {
-  flex: 1;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
+  width: 70%;
+  padding: 12px 15px;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  outline: none;
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+  transition: all 0.3s ease;
 }
 
+.search-input::placeholder {
+  color: #ccc;
+}
+
+.search-input:focus {
+  background: rgba(255, 255, 255, 0.25);
+  box-shadow: 0 0 8px #00ff88;
+}
+
+/* === Create Group Button === */
 .create-group-btn {
-  background-color: #007bff;
-  color: white;
-  padding: 8px 12px;
+  padding: 10px 20px;
+  background: linear-gradient(90deg, #00ff88, #7f00ff);
   border: none;
-  border-radius: 6px;
+  color: #fff;
+  font-weight: 600;
+  border-radius: 10px;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: all 0.3s ease;
+  margin-left: 15px;
 }
 
 .create-group-btn:hover {
-  background-color: #0056b3;
+  transform: scale(1.05);
+  box-shadow: 0 0 15px rgba(127, 0, 255, 0.7);
 }
 
-.search-results {
-  background-color: #f4f4f4;
-  border-radius: 6px;
-  padding: 8px;
-  margin-bottom: 16px;
+/* === Chat List === */
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
+.chat-item {
+  position: relative;
+  padding: 12px 20px;
+  margin: 10px 0;
+  border-radius: 50px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.3s ease;
+}
+
+.chat-item:hover {
+  background: rgba(9, 214, 118, 0.2);
+  transform: scale(1.02);
+}
+
+/* === Delete Button (Hidden by default) === */
+.delete-btn {
+  background: transparent;
+  border: none;
+  color: #ff6666;
+  font-size: 1.2rem;
+  cursor: pointer;
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
+.chat-item:hover .delete-btn {
+  opacity: 1;
+  transform: scale(1.2);
+}
+
+.delete-btn:hover {
+  color: #ff1a1a;
+  text-shadow: 0 0 8px rgba(255, 26, 26, 0.8);
+}
+
+/* === Section Title === */
 .section-title {
   font-weight: 600;
-  margin-bottom: 8px;
+  color: #aaffee;
+  margin-bottom: 10px;
 }
 
-.user-item,
-.chat-item {
-  padding: 10px;
-  border-bottom: 1px solid #ddd;
-  cursor: pointer;
-  border-radius: 4px;
-}
-
-.user-item:hover,
-.chat-item:hover {
-  background-color: #f1f1f1;
-}
-
+/* === No Chats Section === */
 .no-chats {
   text-align: center;
-  color: #666;
-  margin-top: 20px;
+  color: #ccc;
+  font-size: 1.1rem;
+  background: rgba(255, 255, 255, 0.08);
+  padding: 30px;
+  border-radius: 15px;
+  backdrop-filter: blur(8px);
+}
+
+/* === Smooth Fade Animation === */
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.chat-container > * {
+  animation: fadeIn 0.8s ease forwards;
 }

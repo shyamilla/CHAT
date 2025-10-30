@@ -1,0 +1,22 @@
+<div class="personal-chat-container" *ngIf="roomId">
+  <header class="chat-header">
+    <h3>💬 Chat with {{ otherUser }}</h3>
+  </header>
+
+  <div id="messageList" class="messages-box">
+    <div
+      *ngFor="let msg of messages"
+      [ngClass]="{ 'me': msg.senderUsername === me, 'other': msg.senderUsername !== me }"
+      class="message-item"
+    >
+      <div class="sender">{{ msg.senderUsername }}</div>
+      <div class="content">{{ msg.content }}</div>
+      <div class="time">{{ msg.timestamp | date:'shortTime' }}</div>
+    </div>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="sendMessage()" class="input-section">
+    <input type="text" formControlName="message" placeholder="Type a message..." />
+    <button type="submit">Send</button>
+  </form>
+</div>

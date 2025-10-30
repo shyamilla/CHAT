@@ -11,17 +11,19 @@ import { HttpClientModule } from '@angular/common/http';
   selector: 'app-chat-room',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, HttpClientModule],
-  templateUrl: './chat-room.html'
+  templateUrl: './chat-room.html',
+  styleUrls: ['./chat-room.css']
 })
 export class ChatRoomComponent implements OnInit, OnDestroy {
   @ViewChild('scrollContainer') private scrollContainer!: ElementRef;
 
   roomId = '';
+  roomName = ''; // ✅ Added roomName
   username = localStorage.getItem('username') ?? '';
   messages: any[] = [];
   loading = true;
 
-  messageForm; // declare first
+  messageForm;
   private subs: Subscription[] = [];
 
   constructor(
@@ -30,7 +32,6 @@ export class ChatRoomComponent implements OnInit, OnDestroy {
     private chat: ChatService,
     private ws: WsService
   ) {
-    // ✅ Initialize form inside constructor
     this.messageForm = this.fb.group({
       content: ['', [Validators.required]]
     });
@@ -44,13 +45,40 @@ export class ChatRoomComponent implements OnInit, OnDestroy {
       return;
     }
 
+    // ✅ Fetch room details
+    this.loadRoomDetails();
+
     // ✅ Fetch chat history
     this.loadMessages();
 
     // ✅ Subscribe to live WebSocket updates
     this.ws.subscribeToGroup(this.roomId, (msg) => {
-      this.messages.push(msg);
-      this.scrollToBottom();
+      // ❌ This line causes duplicate messages when sender sees their own message again from WebSocket
+      // this.messages.push(msg);
+
+      // ✅ FIX: Only push message if it's from another user
+      if (msg.senderUsername !== this.username) {
+        this.messages.push(msg);
+        this.scrollToBottom();
+      }
+    });
+  }
+
+  loadRoomDetails() {
+    this.chat.getGroupById(this.roomId).subscribe({
+      next: (res) => {
+        // this.roomName = res?.name || 'Unknown Room'; // ✅ Extract roomName
+        if (res?.isPrivate && res?.members) {
+          const otherUser = res.members.find((m: string) => m !== this.username);
+          this.roomName = otherUser || 'Private Chat';
+        } else {
+          this.roomName = res?.name || 'Unknown Room';
+        }
+      },
+      error: (err) => {
+        console.error('Error loading room details:', err);
+        this.roomName = 'Unknown Room';
+      }
     });
   }
 
@@ -78,10 +106,9 @@ export class ChatRoomComponent implements OnInit, OnDestroy {
       content
     };
 
-    // ✅ Send via WebSocket
     this.ws.sendMessage('/app/chat.sendMessage', msg);
 
-    // ✅ Optimistic UI update
+    // ✅ Keep this line — ensures sender instantly sees their message
     this.messages.push({
       ...msg,
       timestamp: new Date().toISOString()

@@ -125,7 +125,7 @@ public class ChatService {
         broadcastGroupUpdate(updated);
         return updated;
     }
-
+ 
     // ✅ REMOVE MEMBER
     public ChatRoom removeMember(String groupId, String adminUsername, String memberToRemove) {
         ChatRoom group = getGroupById(groupId);
@@ -210,6 +210,84 @@ public class ChatService {
         return chatRoomRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Group not found: " + id));
     }
+
+
+    // ------------------------- Private chat helpers -------------------------
+
+/**
+ * Build a stable name for a private chat (lexicographic order).
+ * e.g. "alice-bob"
+ */
+private String buildPrivateChatName(String a, String b) {
+    List<String> s = Arrays.asList(a, b);
+    Collections.sort(s, String::compareToIgnoreCase);
+    return String.join("-", s);
+}
+
+/**
+ * Get existing private chat by two participants or create it.
+ */
+public ChatRoom getOrCreatePrivateChat(String userA, String userB) {
+    if (userA == null || userB == null || userA.isBlank() || userB.isBlank()) {
+        throw new RuntimeException("Both usernames are required to create a private chat.");
+    }
+    String name = buildPrivateChatName(userA, userB);
+
+    Optional<ChatRoom> existing = chatRoomRepository.findByName(name);
+    if (existing.isPresent()) {
+        return existing.get();
+    }
+
+    // ensure both users exist
+    User ua = userRepository.findByUsername(userA)
+            .orElseThrow(() -> new RuntimeException("User not found: " + userA));
+    User ub = userRepository.findByUsername(userB)
+            .orElseThrow(() -> new RuntimeException("User not found: " + userB));
+
+    ChatRoom room = new ChatRoom();
+    room.setName(name);
+    room.setIsPrivate(true);
+    List<String> members = new ArrayList<>();
+    members.add(ua.getUsername());
+    members.add(ub.getUsername());
+    room.setMembers(members);
+    // no admins for private chats by default; keep admins empty or set both if desired
+    ChatRoom saved = chatRoomRepository.save(room);
+
+    // Notify both users of new DM
+    saved.getMembers().forEach(user -> messagingTemplate.convertAndSendToUser(
+            user, "/topic/updates", "DM_CREATED:" + saved.getName()));
+
+    return saved;
+}
+
+/**
+ * List private chats for a user (filter the rooms that are private)
+ */
+public List<Map<String, Object>> getPrivateChatsForUser(String username) {
+    List<ChatRoom> all = chatRoomRepository.findByMembersContaining(username);
+    List<Map<String, Object>> privateChats = new ArrayList<>();
+
+    for (ChatRoom r : all) {
+        if (r.getIsPrivate()) {
+            String otherUser = r.getMembers()
+                    .stream()
+                    .filter(m -> !m.equalsIgnoreCase(username))
+                    .findFirst()
+                    .orElse("Unknown");
+
+            Map<String, Object> dto = new HashMap<>();
+            dto.put("id", r.getId());
+            dto.put("name", r.getName());
+            dto.put("isPrivate", true);
+            dto.put("members", r.getMembers());
+            dto.put("displayName", otherUser);
+            privateChats.add(dto);
+        }
+    }
+    return privateChats;
+}
+
 
 
 }

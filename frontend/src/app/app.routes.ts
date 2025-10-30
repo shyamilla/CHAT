@@ -14,6 +14,7 @@ import { ModifyGroupComponent } from '../app/chat/modify-group/modify-group';
 
 // Auth Guard
 import { AuthGuard } from '../app/core/guards/auth-guard';
+import { PersonalChatComponent } from './chat/personal-chat/personal-chat';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -26,6 +27,10 @@ export const routes: Routes = [
   { path: 'chats/rooms/:id', component: ChatRoomComponent, canActivate: [AuthGuard] },
   { path: 'chats/create-group', component: CreateGroupComponent, canActivate: [AuthGuard] },
   { path: 'chats/modify-group/:id', component: ModifyGroupComponent, canActivate: [AuthGuard] },
+
+
+  { path: 'chats/personal/:username', component: PersonalChatComponent, canActivate: [AuthGuard] },
+
 
   { path: '**', redirectTo: 'login' }
 ];

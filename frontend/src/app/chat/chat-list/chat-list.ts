@@ -70,17 +70,57 @@ export class ChatListComponent implements OnInit, OnDestroy {
     this.subs.push(s);
   }
 
-  loadChats() {
-    if (!this.username) return;
-    this.chat.getUserChatRooms(this.username).subscribe({
-      next: (res) => (this.chats = res || []),
-      error: (err) => console.error(err)
-    });
-  }
+  // loadChats() {
+  //   if (!this.username) return;
+  //   this.chat.getUserChatRooms(this.username).subscribe({
+  //     next: (res) => (this.chats = res || []),
+  //     error: (err) => console.error(err)
+  //   });
+  // }
 
-  openChat(roomId: string) {
-    this.router.navigate(['/chats/rooms', roomId]);
+
+  loadChats() {
+  if (!this.username) return;
+
+  this.chat.getUserChatRooms(this.username).subscribe({
+    next: (groupChats) => {
+      this.chat.getPrivateChats(this.username).subscribe({
+        next: (privateChats) => {
+          const groups = (groupChats || []).map(c => ({ ...c, type: 'group' }));
+
+          // 🧠 Backend already provides displayName for private chats
+          const privates = (privateChats || []).map(c => ({
+            ...c,
+            type: 'private',
+            displayName: c.displayName || c.name
+          }));
+
+          this.chats = [...privates, ...groups];
+        },
+        error: (err) => console.error('Error loading private chats:', err)
+      });
+    },
+    error: (err) => console.error('Error loading group chats:', err)
+  });
+}
+
+
+
+
+  // openChat(roomId: string) {
+  //   this.router.navigate(['/chats/rooms', roomId]);
+  // }
+
+  openChat(chat: any) {
+  if (chat.type === 'private') {
+    // navigate to personal chat with the other username
+    const other = chat.members.find((m: string) => m !== this.username);
+    this.router.navigate(['/chats/personal', other]);
+  } else {
+    this.router.navigate(['/chats/rooms', chat.id]);
   }
+}
+
 
   // ✅ Start DM between two users
   startDirectChat(otherUsername: string) {
@@ -108,6 +148,21 @@ export class ChatListComponent implements OnInit, OnDestroy {
 
   createGroupManual() { 
     this.router.navigate(['/chats/create-group']);
+  }
+
+   /** 🗑 Delete entire chat */
+  deleteChat(chat: any, event: MouseEvent) {
+    event.stopPropagation(); // prevent navigation
+
+    if (!confirm(`Are you sure you want to delete "${chat.name}"?`)) return;
+
+    this.chat.deleteChat(chat.id).subscribe({
+      next: () => {
+        this.chats = this.chats.filter((c) => c.id !== chat.id);
+        console.log(`✅ Deleted chat ${chat.id}`);
+      },
+      error: (err) => console.error('❌ Delete error:', err)
+    });
   }
 
   ngOnDestroy() {

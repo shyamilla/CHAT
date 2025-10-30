@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 export class ChatService {
   private apiUrl = `${environment.apiUrl}`;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   /** 🧠 Helper: Builds headers with Authorization token */
   private getAuthHeaders(): HttpHeaders {
@@ -83,4 +83,33 @@ export class ChatService {
     const headers = this.getAuthHeaders();
     return this.http.get<any>(`${this.apiUrl}/groups/${groupId}`, { headers });
   }
+
+  getGroupById(id: string) {
+    return this.http.get<any>(`${this.apiUrl}/chats/groups/${id}`);
+  }
+
+  deleteChat(chatId: string) {
+    const headers = this.getAuthHeaders();
+    return this.http.delete(`${this.apiUrl}/chats/delete/${chatId}`, { headers });
+
+
+  }
+
+
+
+  // Get or create a private chat between current user and another user
+  getOrCreatePrivateChat(otherUsername: string) {
+    const headers = this.getAuthHeaders();
+    return this.http.post<any>(`${this.apiUrl}/chats/private/${otherUsername}`, {}, { headers });
+  }
+  
+  // Get all private chat rooms for a user
+  getPrivateChats(username: string) {
+    const headers = this.getAuthHeaders();
+    return this.http.get<any[]>(`${this.apiUrl}/chats/private/rooms/${username}`,  { headers });
+  }
+
+
+
+
 }
