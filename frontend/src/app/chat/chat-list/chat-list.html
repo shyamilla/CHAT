@@ -1,5 +1,10 @@
 <div class="chat-list-container">
 
+  <!-- 🚪 Logout Button -->
+  <div class="logout-section">
+    <button (click)="logout()" class="btn-logout">🚪 Logout</button>
+  </div>
+
   <!-- 🔍 Search bar for finding users -->
   <div class="search-section">
     <form [formGroup]="searchForm" class="search-form">
@@ -37,7 +42,6 @@
       </div>
       <div class="chat-type">
         {{ getChatDisplayName(chat) }}
-
       </div>
     </div>
   </div>

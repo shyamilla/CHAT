@@ -41,30 +41,14 @@ export class ChatListComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     const token = localStorage.getItem('jwt_token') ?? undefined;
-    if (token) this.ws.connect(); // Expected 0 arguments, but got 1.ts(2554)
+    if (token) this.ws.connect();
 
+    // TODO: implement these in WsService if needed
+    // this.ws.subscribeToUserUpdates();
+    // const chatSub = this.ws.chatList$.subscribe(...);
 
-    // Subscribe for user updates
-    this.ws.subscribeToUserUpdates(); // Property 'subscribeToUserUpdates' does not exist on type 'WsService'.ts(2339)
-
-
-    // WebSocket-driven chat list updates
-    const chatSub = this.ws.chatList$.subscribe((list : any[]) => { // Property 'chatList$' does not exist on type 'WsService'.ts(2339)
-
-      // Parameter 'list' implicitly has an 'any' type.ts(7006)
-
-      if (list && list.length > 0) {
-        this.chats = this.filterUniqueChats(list);
-      } else {
-        this.loadChats();
-      }
-    });
-    this.subs.push(chatSub);
-
-    // Initial chat load
     this.loadChats();
 
-    // 🔎 Debounced user search (for personal chat)
     const searchSub = this.searchForm.get('query')!.valueChanges
       .pipe(debounceTime(400))
       .subscribe((query) => {
@@ -79,12 +63,10 @@ export class ChatListComponent implements OnInit, OnDestroy {
       });
     this.subs.push(searchSub);
 
-    // 🧱 Group form init
     this.groupForm = this.fb.group({
       name: ['', Validators.required]
     });
 
-    // 🔍 Group member search
     const groupSearchSub = this.groupSearch.valueChanges
       .pipe(debounceTime(400))
       .subscribe((term) => {
@@ -110,7 +92,7 @@ export class ChatListComponent implements OnInit, OnDestroy {
     this.chat.getUserChatRooms(this.username).subscribe({
       next: (res) => {
         this.chats = this.filterUniqueChats(res || []);
-        this.ws.updateChatList(this.chats);
+        this.ws.updateChatList?.(this.chats);
       },
       error: (err) => console.error('❌ Error loading chats:', err)
     });
@@ -140,7 +122,6 @@ export class ChatListComponent implements OnInit, OnDestroy {
   /** 💬 Start a personal chat with another user */
   startDirectChat(otherUsername: string) {
     if (!this.username || !otherUsername) return;
-
     this.chat.getOrCreatePrivateChat(otherUsername).subscribe({
       next: (data) => {
         console.log('✅ Private chat started:', data);
@@ -181,41 +162,27 @@ export class ChatListComponent implements OnInit, OnDestroy {
     });
   }
 
-  /** 🗑 Delete chat */
-  // deleteChat(chat: any, event: MouseEvent) {
-  //   event.stopPropagation();
-  //   if (!confirm(`Delete "${chat.name}"?`)) return;
-
-  //   this.chat.deleteChat(chat.id).subscribe({
-  //     next: () => {
-  //       this.chats = this.chats.filter((c) => c.id !== chat.id);
-  //       this.ws.updateChatList(this.chats);
-  //     },
-  //     error: (err) => console.error('❌ Delete error:', err)
-  //   });
-  // }
+  /** 🚪 Logout: Remove token and redirect to login */
+  logout() {
+    localStorage.removeItem('jwt_token');
+    localStorage.removeItem('username');
+    this.ws.disconnect?.();
+    this.router.navigate(['/login']);
+  }
 
   /** 🧹 Cleanup subscriptions */
   ngOnDestroy() {
     this.subs.forEach((s) => s.unsubscribe());
   }
 
-
-getChatDisplayName(chat: any): string {
-  // ✅ Handle groups first
-  if (chat.isGroup || chat.type === 'group') {
-    return chat.displayName || chat.name || 'Unnamed Group';
+  getChatDisplayName(chat: any): string {
+    if (chat.isGroup || chat.type === 'group') {
+      return chat.displayName || chat.name || 'Unnamed Group';
+    }
+    if (Array.isArray(chat.members)) {
+      const other = chat.members.find((m: string) => m !== this.username);
+      return other || chat.displayName || 'Unknown';
+    }
+    return chat.displayName || 'Unknown';
   }
-
-  // ✅ Handle private chats
-  if (Array.isArray(chat.members)) {
-    const other = chat.members.find((m: string) => m !== this.username);
-    return other || chat.displayName || 'Unknown';
-  }
-
-  return chat.displayName || 'Unknown';
-}
-
-
-
 }
