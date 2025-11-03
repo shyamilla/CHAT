@@ -1,0 +1,98 @@
+<div class="chat-list-container">
+
+  <!-- 🔍 Search bar for finding users -->
+  <div class="search-section">
+    <form [formGroup]="searchForm" class="search-form">
+      <input
+        type="text"
+        placeholder="Search users..."
+        formControlName="query"
+        class="search-input"
+      />
+    </form>
+  </div>
+
+  <!-- 🧑‍💻 Show searched users -->
+  <div class="search-results" *ngIf="users.length > 0">
+    <h4>Users</h4>
+    <div
+      class="user-item"
+      *ngFor="let user of users"
+      (click)="startDirectChat(user.username)"
+    >
+      <span>{{ user.username }}</span>
+    </div>
+  </div>
+
+  <!-- 💬 Chat list (personal + groups) -->
+  <div class="chats-section" *ngIf="chats.length > 0">
+    <h4>Your Chats</h4>
+    <div
+      class="chat-item"
+      *ngFor="let chat of chats"
+      (click)="openChat(chat)"
+    >
+      <div class="chat-name">
+         <strong>{{ getChatDisplayName(chat) }}</strong>
+      </div>
+      <div class="chat-type">
+        {{ getChatDisplayName(chat) }}
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ➕ Create Group Button -->
+  <div class="group-create-toggle">
+    <button (click)="toggleGroupCreation()" class="btn-toggle">
+      {{ creatingGroup ? 'Cancel Group Creation' : '➕ Create Group' }}
+    </button>
+  </div>
+
+  <!-- 🏗 Group Creation UI -->
+  <div class="group-create-form" *ngIf="creatingGroup">
+    <form [formGroup]="groupForm" (ngSubmit)="createGroup()">
+      <input
+        type="text"
+        placeholder="Enter group name"
+        formControlName="name"
+        class="group-input"
+      />
+
+      <!-- 🔎 Member search -->
+      <input
+        type="text"
+        placeholder="Search members..."
+        [formControl]="groupSearch"
+        class="group-input"
+      />
+
+      <div class="group-search-results" *ngIf="groupResults.length > 0">
+        <div
+          class="group-user-item"
+          *ngFor="let u of groupResults"
+          (click)="toggleMember(u.username)"
+          [class.selected]="selectedMembers.includes(u.username)"
+        >
+          <span>{{ u.username }}</span>
+        </div>
+      </div>
+
+      <div class="selected-members" *ngIf="selectedMembers.length > 0">
+        <h5>Selected Members:</h5>
+        <div class="member-chip" *ngFor="let m of selectedMembers">
+          {{ m }}
+          <span class="remove" (click)="toggleMember(m)">✕</span>
+        </div>
+      </div>
+
+      <button
+        type="submit"
+        class="btn-create"
+        [disabled]="groupForm.invalid || selectedMembers.length === 0"
+      >
+        Create Group
+      </button>
+    </form>
+  </div>
+</div>

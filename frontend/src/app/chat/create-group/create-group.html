@@ -1,0 +1,45 @@
+<div class="create-group-container">
+  <div class="form-card">
+    <h2>Create Group</h2>
+
+    <form [formGroup]="form" (ngSubmit)="createGroup()">
+      <!-- Group Name -->
+      <div class="form-group">
+        <label>Group Name</label>
+        <input
+          type="text"
+          formControlName="groupName"
+          placeholder="Enter group name"
+        />
+        <div
+          *ngIf="form.get('groupName')?.invalid && form.get('groupName')?.touched"
+          class="error-text"
+        >
+          Group name is required (min 3 chars)
+        </div>
+      </div>
+
+      <!-- Members -->
+      <div class="form-group">
+        <label>Select Members</label>
+        <div class="member-list">
+          <div *ngFor="let user of users" class="member-item">
+            <label>
+              <input
+                type="checkbox"
+                (change)="onMemberToggle(user.username, $event.target.checked)"
+              />
+              {{ user.username }}
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <button type="submit" [disabled]="loading">
+        {{ loading ? 'Creating...' : 'Create Group' }}
+      </button>
+    </form>
+
+    <p *ngIf="message" class="success-text">{{ message }}</p>
+  </div>
+</div>

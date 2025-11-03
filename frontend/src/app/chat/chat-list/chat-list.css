@@ -1,0 +1,74 @@
+.chat-list-container {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 16px;
+  font-family: Arial, sans-serif;
+}
+
+.search-section {
+  margin-bottom: 16px;
+}
+
+.search-input, .group-input {
+  width: 100%;
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  margin-bottom: 10px;
+}
+
+.user-item, .chat-item, .group-user-item {
+  padding: 10px;
+  border-radius: 6px;
+  margin-bottom: 8px;
+  background: #f6f6f6;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.user-item:hover,
+.chat-item:hover,
+.group-user-item:hover {
+  background: #e3e3e3;
+}
+
+.group-user-item.selected {
+  background: #cce5ff;
+}
+
+.group-create-toggle {
+  text-align: center;
+  margin: 20px 0;
+}
+
+.btn-toggle, .btn-create {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btn-toggle:hover, .btn-create:hover {
+  background: #0056b3;
+}
+
+.selected-members {
+  margin-top: 10px;
+}
+
+.member-chip {
+  display: inline-block;
+  background: #d9f0ff;
+  color: #333;
+  padding: 5px 10px;
+  margin: 4px;
+  border-radius: 20px;
+}
+
+.member-chip .remove {
+  cursor: pointer;
+  margin-left: 8px;
+  color: #ff4d4d;
+}

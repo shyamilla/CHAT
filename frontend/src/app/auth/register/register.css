@@ -1,0 +1,161 @@
+/* === Page Layout === */
+body, .auth-container {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #0a3267 0%, #012c30 50%, #ffffff 100%);
+  font-family: "Inter", "Segoe UI", Roboto, sans-serif;
+  background-size: 200% 200%;
+  animation: gradientShift 8s ease infinite;
+}
+
+/* === Card === */
+.auth-card {
+  backdrop-filter: blur(18px) saturate(180%);
+  -webkit-backdrop-filter: blur(18px) saturate(180%);
+  background-color: rgba(255, 255, 255, 0.18);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
+  padding: 2.5rem;
+  width: 100%;
+  max-width: 400px;
+  color: #ffffff;
+  animation: fadeIn 0.8s ease-out;
+  transition: all 0.4s ease;
+}
+
+.auth-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+  background-color: rgba(255, 255, 255, 0.25);
+}
+
+/* === Title === */
+.auth-card h2 {
+  text-align: center;
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin-bottom: 1.8rem;
+  color: #ffffff;
+  letter-spacing: 0.5px;
+}
+
+/* === Form === */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+label {
+  font-weight: 500;
+  color: #ffffff;
+  margin-bottom: 0.3rem;
+  font-size: 0.95rem;
+  opacity: 0.9;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 10px;
+  padding: 0.8rem;
+  font-size: 1rem;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+  transition: all 0.3s ease;
+}
+
+input:focus {
+  background: rgba(255, 255, 255, 0.25);
+  border-color: #0cf614;
+  box-shadow: 0 0 10px rgba(12, 246, 20, 0.4);
+  outline: none;
+}
+
+input::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* === Button === */
+button[type="submit"] {
+  background: linear-gradient(90deg, #000000, #0cf614);
+  color: #ffffff;
+  border: none;
+  border-radius: 10px;
+  padding: 0.9rem;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  letter-spacing: 0.5px;
+}
+
+button[type="submit"]:hover {
+  transform: scale(1.03);
+  box-shadow: 0 10px 25px rgba(12, 246, 20, 0.3);
+  background: linear-gradient(90deg, #0cf614, #000000);
+}
+
+button[type="submit"]:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* === Errors === */
+.error, .error-message {
+  color: #ff6b6b;
+  font-size: 0.85rem;
+  margin-top: 0.2rem;
+  text-align: center;
+}
+
+/* === Links === */
+.links {
+  text-align: center;
+  margin-top: 1.5rem;
+  font-size: 0.9rem;
+  color: #ffffff;
+  opacity: 0.85;
+}
+
+.links a {
+  color: #0cf614;
+  text-decoration: none;
+  font-weight: 500;
+  margin: 0 0.4rem;
+  transition: all 0.3s ease;
+}
+
+.links a:hover {
+  text-decoration: underline;
+  color: #ffffff;
+}
+
+/* === Animations === */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* === Responsive === */
+@media (max-width: 480px) {
+  .auth-card {
+    padding: 1.8rem;
+    border-radius: 12px;
+  }
+  .auth-card h2 {
+    font-size: 1.5rem;
+  }
+}

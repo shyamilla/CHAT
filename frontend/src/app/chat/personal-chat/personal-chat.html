@@ -1,0 +1,52 @@
+<div class="chat-room-container">
+  <!-- 💬 Chat Header -->
+  <div class="chat-header">
+    <h3> {{ receiverUsername }}</h3>
+  </div>
+
+  <!-- 💭 Chat Messages -->
+  <div class="chat-messages">
+    <div
+      *ngFor="let msg of messages"
+      class="message-row"
+      [ngClass]="{
+        'own-row': msg.senderDisplayName === 'You',
+        'other-row': msg.senderDisplayName !== 'You'
+      }"
+    >
+      <div
+        [ngClass]="{
+          'message-own': msg.senderDisplayName === 'You',
+          'message-other': msg.senderDisplayName !== 'You'
+        }"
+        class="message-bubble"
+      >
+        <!-- 👤 Sender Name -->
+        <div class="sender">{{ msg.senderDisplayName }}</div>
+
+        <!-- ✉️ Message Content -->
+        <div class="content">{{ msg.content }}</div>
+
+        <!-- 🕓 Timestamp -->
+        <div class="timestamp">{{ msg.timestamp | date: 'shortTime' }}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 📝 Chat Input -->
+  <form
+    class="chat-input-container"
+    [formGroup]="chatForm"
+    (ngSubmit)="sendMessage()"
+  >
+    <input
+      formControlName="content"
+      type="text"
+      placeholder="Type a message..."
+      autocomplete="off"
+    />
+    <button type="submit" [disabled]="!chatForm.value.content?.trim()">
+      Send
+    </button>
+  </form>
+</div>
