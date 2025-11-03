@@ -37,13 +37,7 @@ export class ChatRoomComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    // this.username = this.auth.getUsername()?.trim() || null;
-    
-    // do not change this part of code to access username from local storage
-    this.username = localStorage.getItem('username')
-
-    // further if the username is same as sender name, the display should be 'you' rather than the current username
-    
+    this.username = localStorage.getItem('username');
     const me = this.username?.toLowerCase() || '';
     console.log('[Init] Username:', this.username);
 
@@ -57,7 +51,6 @@ export class ChatRoomComponent implements OnInit, OnDestroy {
       console.log('[Init] Not enough URL segments for roomId.');
     }
 
-    // Attempt to get userParam from either route params or query params
     let userParamRaw: string | null = null;
     if (this.route.snapshot.paramMap.has('userParam')) {
       userParamRaw = this.route.snapshot.paramMap.get('userParam');
@@ -69,8 +62,6 @@ export class ChatRoomComponent implements OnInit, OnDestroy {
     if (this.roomId) {
       this.isGroup = true;
       console.log('[Init] Mode: Group chat, roomId:', this.roomId);
-
-      // Fetch group info
       this.chatService.getRoomById(this.roomId).subscribe({
         next: (room) => {
           this.groupName = room?.name || 'Group Chat';
@@ -78,17 +69,13 @@ export class ChatRoomComponent implements OnInit, OnDestroy {
         },
         error: (err) => console.error('[Group info] Error:', err)
       });
-
       this.loadGroupMessages(this.roomId);
       this.socket.subscribeToRoom(this.roomId);
       console.log('[WebSocket] Subscribed to group room:', this.roomId);
-
     } else if (userParamRaw && userParamRaw.trim().length > 0) {
-      // userParam is defined and non-empty string
       this.receiverUsername = userParamRaw.trim().toLowerCase();
       this.isGroup = false;
       console.log('[Init] Mode: Private chat, receiverUsername:', this.receiverUsername);
-
       this.loadPrivateChat(this.receiverUsername);
     } else {
       console.warn('[Init] Unable to determine chat type (group/private). Check route params!');
@@ -104,7 +91,6 @@ export class ChatRoomComponent implements OnInit, OnDestroy {
 
       const sender = (msg.senderUsername || msg.sender || '').trim().toLowerCase();
       const receiver = (msg.receiverUsername || msg.receiver || '').trim().toLowerCase();
-
       const isGroupMsg = this.isGroup && msg.roomId === this.roomId;
       const isPrivateMsg =
         !this.isGroup &&
@@ -120,6 +106,7 @@ export class ChatRoomComponent implements OnInit, OnDestroy {
           isOwn: sender === me
         };
 
+        // Push the new message into the messages array
         this.messages.push(displayMsg);
         setTimeout(() => this.scrollToBottom(), 100);
         console.log('[Socket] Message pushed:', displayMsg, 'Total messages:', this.messages.length);
@@ -129,7 +116,6 @@ export class ChatRoomComponent implements OnInit, OnDestroy {
     console.log('[Init] Socket message subscription added.');
   }
 
-  /** 🧩 Load group messages */
   private loadGroupMessages(roomId: string) {
     const me = this.username?.toLowerCase() || '';
     console.log('[GroupMessages] Loading for room:', roomId);
@@ -150,7 +136,6 @@ export class ChatRoomComponent implements OnInit, OnDestroy {
     });
   }
 
-  /** 💬 Load private chat messages */
   private loadPrivateChat(otherUser: string) {
     const me = this.username?.toLowerCase() || '';
     console.log('[PrivateChat] Loading for:', otherUser);
@@ -174,7 +159,6 @@ export class ChatRoomComponent implements OnInit, OnDestroy {
     });
   }
 
-  /** 🚀 Send message */
   sendMessage() {
     const content = this.chatForm.value.content?.trim();
     if (!content || !this.roomId) {
@@ -193,7 +177,6 @@ export class ChatRoomComponent implements OnInit, OnDestroy {
     this.chatForm.reset();
   }
 
-  /** 📜 Scroll to bottom */
   private scrollToBottom() {
     const el = document.querySelector('.chat-messages');
     if (el) el.scrollTop = el.scrollHeight;
