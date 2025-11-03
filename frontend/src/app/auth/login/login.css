@@ -1,160 +1,157 @@
-/* === Page Layout === */
-body, .auth-container {
+/* Full-page dark aqua gradient background */
+html, body {
+  height: 100%;
   margin: 0;
-  min-height: 100vh;
+  overflow: hidden;
+  font-family: "Poppins", sans-serif;
   display: flex;
-  align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #0a3267 0%, #012c30 50%, #ffffff 100%);
-  font-family: "Inter", "Segoe UI", Roboto, sans-serif;
-  background-size: 200% 200%;
-  animation: gradientShift 8s ease infinite;
+  align-items: center;
 }
 
-/* === Card === */
+/* Container */
+.auth-container {
+  background: linear-gradient(135deg, #057a95 0%, #026475 50%, #22c9db 100%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+/* Glassmorphic Login Card */
 .auth-card {
-  backdrop-filter: blur(18px) saturate(180%);
-  -webkit-backdrop-filter: blur(18px) saturate(180%);
-  background-color: rgba(255, 255, 255, 0.18);
-  border-radius: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
-  padding: 2.5rem;
-  width: 100%;
-  max-width: 400px;
-  color: #ffffff;
-  animation: fadeIn 0.8s ease-out;
-  transition: all 0.4s ease;
-}
-
-.auth-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
-  background-color: rgba(255, 255, 255, 0.25);
-}
-
-/* === Title === */
-.auth-card h2 {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 18px;
+  box-shadow: 0 8px 30px rgba(0, 255, 255, 0.15);
+  width: 360px;
+  padding: 2rem;
   text-align: center;
-  font-size: 1.8rem;
+  animation: fadeIn 0.8s ease-in-out;
+  transition: all 0.3s ease;
+}
+
+/* Card hover glow */
+.auth-card:hover {
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.25);
+  transform: translateY(-3px);
+}
+
+/* Title */
+.auth-card h2 {
+  color: #e0ffff;
   font-weight: 600;
-  margin-bottom: 1.8rem;
-  color: #ffffff;
+  margin-bottom: 1.5rem;
   letter-spacing: 0.5px;
 }
 
-/* === Form === */
-form {
-  display: flex;
-  flex-direction: column;
-  gap: 1.2rem;
+/* Form group */
+.form-group {
+  text-align: left;
+  margin-bottom: 1.2rem;
 }
 
 label {
   font-weight: 500;
-  color: #ffffff;
-  margin-bottom: 0.3rem;
-  font-size: 0.95rem;
-  opacity: 0.9;
+  color: #b7f8ff;
+  display: block;
+  margin-bottom: 0.4rem;
 }
 
-input[type="email"],
-input[type="password"] {
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  border-radius: 10px;
-  padding: 0.8rem;
-  font-size: 1rem;
+input {
   width: 100%;
-  background: rgba(255, 255, 255, 0.15);
-  color: #ffffff;
-  transition: all 0.3s ease;
-}
-
-input:focus {
-  background: rgba(255, 255, 255, 0.25);
-  border-color: #0cf614;
-  box-shadow: 0 0 10px rgba(12, 246, 20, 0.4);
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(0, 255, 255, 0.25);
   outline: none;
+  font-size: 0.95rem;
+  background: rgba(255, 255, 255, 0.12);
+  color: #eaffff;
+  transition: all 0.3s ease;
 }
 
 input::placeholder {
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(230, 255, 255, 0.5);
 }
 
-/* === Button === */
-button[type="submit"] {
-  background: linear-gradient(90deg, #000000, #0cf614);
-  color: #ffffff;
-  border: none;
-  border-radius: 10px;
-  padding: 0.9rem;
+input:focus {
+  border-color: #00e1ff;
+  background: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+}
+
+/* Error messages */
+.error small {
+  color: #ff7b7b;
+  display: block;
+  font-size: 0.8rem;
+  margin-top: 4px;
+}
+
+.error-message {
+  color: #ff7b7b;
+  font-weight: 500;
+  margin-bottom: 1rem;
+}
+
+/* Submit button */
+button {
+  width: 100%;
+  background: linear-gradient(135deg, #00e1ff, #48ffc7);
+  color: #003c4d;
   font-weight: 600;
-  font-size: 1rem;
+  padding: 10px 0;
+  border: none;
+  border-radius: 8px;
   cursor: pointer;
-  transition: all 0.3s ease;
-  letter-spacing: 0.5px;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 10px rgba(0, 255, 255, 0.2);
 }
 
-button[type="submit"]:hover {
-  transform: scale(1.03);
-  box-shadow: 0 10px 25px rgba(12, 246, 20, 0.3);
-  background: linear-gradient(90deg, #0cf614, #000000);
+button:hover {
+  transform: translateY(-2px);
+  background: linear-gradient(135deg, #40ffe8, #6fffdc);
+  box-shadow: 0 6px 16px rgba(0, 255, 255, 0.3);
 }
 
-button[type="submit"]:disabled {
+/* Click (active) animation */
+button:active {
+  transform: scale(0.96);
+  box-shadow: 0 3px 8px rgba(0, 255, 255, 0.25);
+}
+
+button:disabled {
   opacity: 0.6;
   cursor: not-allowed;
 }
 
-/* === Errors === */
-.error, .error-message {
-  color: #ff6b6b;
-  font-size: 0.85rem;
-  margin-top: 0.2rem;
-  text-align: center;
-}
-
-/* === Links === */
+/* Footer links */
 .links {
-  text-align: center;
-  margin-top: 1.5rem;
-  font-size: 0.9rem;
-  color: #ffffff;
-  opacity: 0.85;
+  margin-top: 1.4rem;
 }
 
 .links a {
-  color: #0cf614;
+  color: #71f7ff;
   text-decoration: none;
   font-weight: 500;
-  margin: 0 0.4rem;
-  transition: all 0.3s ease;
+  transition: 0.3s ease;
 }
 
 .links a:hover {
+  color: #00e1ff;
   text-decoration: underline;
-  color: #ffffff;
 }
 
-/* === Animations === */
+/* Fade-in animation */
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(15px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes gradientShift {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
-/* === Responsive === */
-@media (max-width: 480px) {
-  .auth-card {
-    padding: 1.8rem;
-    border-radius: 12px;
+  from {
+    opacity: 0;
+    transform: translateY(20px);
   }
-  .auth-card h2 {
-    font-size: 1.5rem;
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

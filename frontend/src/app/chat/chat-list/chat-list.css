@@ -1,74 +1,281 @@
+/* ==============================
+   🌌 Layout Container (Dark Blue)
+============================== */
 .chat-list-container {
-  max-width: 500px;
-  margin: 0 auto;
-  padding: 16px;
-  font-family: Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  height: 100%;
+  padding: 1rem;
+  background: linear-gradient(180deg, #0d1b2a, #0b1320);
+  /* border-radius: 1rem; */
+  overflow-y: auto;
+  color: #e3e8f0;
+  transition: all 0.4s ease;
 }
 
-.search-section {
-  margin-bottom: 16px;
+.chat-list-container::-webkit-scrollbar {
+  width: 6px;
+}
+.chat-list-container::-webkit-scrollbar-thumb {
+  background: rgba(0, 150, 255, 0.25);
+  border-radius: 8px;
 }
 
-.search-input, .group-input {
-  width: 100%;
-  padding: 8px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  margin-bottom: 10px;
+/* ==============================
+   🚪 Logout Section
+============================== */
+.logout-section {
+  display: flex;
+  justify-content: flex-end;
 }
-
-.user-item, .chat-item, .group-user-item {
-  padding: 10px;
-  border-radius: 6px;
-  margin-bottom: 8px;
-  background: #f6f6f6;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.user-item:hover,
-.chat-item:hover,
-.group-user-item:hover {
-  background: #e3e3e3;
-}
-
-.group-user-item.selected {
-  background: #cce5ff;
-}
-
-.group-create-toggle {
-  text-align: center;
-  margin: 20px 0;
-}
-
-.btn-toggle, .btn-create {
-  background: #007bff;
-  color: white;
+.btn-logout {
+  background: linear-gradient(135deg, #ff416c, #ff4b2b);
   border: none;
-  padding: 10px 14px;
+  color: white;
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 10px rgba(255, 75, 43, 0.2);
+}
+.btn-logout:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 15px rgba(255, 75, 43, 0.4);
+}
+
+/* ==============================
+   🔍 Search Section
+============================== */
+.search-section {
+  display: flex;
+  justify-content: center;
+}
+.search-form {
+  width: 100%;
+}
+.search-input {
+  width: 100%;
+  padding: 0.6rem 1rem;
+  border: none;
+  border-radius: 8px;
+  outline: none;
+  background: rgba(17, 34, 64, 0.7);
+  color: #dce3f2;
+  transition: all 0.3s ease;
+}
+.search-input:focus {
+  background: rgba(35, 70, 130, 0.9);
+  box-shadow: 0 0 0 2px rgba(0, 140, 255, 0.5);
+}
+
+/* ==============================
+   🧑‍💻 Search Results
+============================== */
+.search-results {
+  background: rgba(10, 25, 47, 0.9);
+  border-radius: 10px;
+  padding: 0.5rem 0.75rem;
+  animation: fadeIn 0.4s ease;
+}
+.search-results h4 {
+  font-size: 0.9rem;
+  color: #9dbaf7;
+  margin-bottom: 0.5rem;
+}
+.user-item {
+  padding: 0.5rem 0.75rem;
   border-radius: 6px;
   cursor: pointer;
+  transition: all 0.3s ease;
+}
+.user-item:hover {
+  background: rgba(0, 102, 204, 0.25);
+  transform: translateX(4px);
 }
 
-.btn-toggle:hover, .btn-create:hover {
-  background: #0056b3;
+/* ==============================
+   💬 Chat Section
+============================== */
+.chats-section {
+  background: rgba(14, 30, 64, 0.8);
+  border-radius: 10px;
+  padding: 0.75rem;
+  animation: fadeInUp 0.5s ease;
+  box-shadow: 0 0 12px rgba(0, 0, 50, 0.3);
+}
+.chats-section h4 {
+  font-size: 0.9rem;
+  color: #9dbaf7;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
-.selected-members {
-  margin-top: 10px;
-}
-
-.member-chip {
-  display: inline-block;
-  background: #d9f0ff;
-  color: #333;
-  padding: 5px 10px;
-  margin: 4px;
-  border-radius: 20px;
-}
-
-.member-chip .remove {
+.chat-item {
+  background: rgba(20, 40, 80, 0.7);
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  margin-bottom: 0.5rem;
   cursor: pointer;
-  margin-left: 8px;
-  color: #ff4d4d;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+.chat-item:hover {
+  background: rgba(0, 102, 204, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 0 8px rgba(0, 120, 255, 0.4);
+}
+.chat-name strong {
+  font-size: 1rem;
+  color: #eaf1ff;
+}
+.chat-type {
+  font-size: 0.85rem;
+  color: #8ea9e8;
+}
+
+/* ==============================
+   ➕ Create Group Toggle
+============================== */
+.group-create-toggle {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+}
+.btn-toggle {
+  background: linear-gradient(135deg, #007bff, #00bcd4);
+  border: none;
+  color: #fff;
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 10px rgba(0, 150, 255, 0.3);
+}
+.btn-toggle:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 16px rgba(0, 150, 255, 0.5);
+}
+
+/* ==============================
+   🏗 Group Creation Form
+============================== */
+.group-create-form {
+  background: rgba(17, 34, 68, 0.9);
+  border-radius: 12px;
+  padding: 1rem;
+  animation: fadeIn 0.5s ease;
+}
+.group-input {
+  width: 100%;
+  padding: 0.6rem 1rem;
+  border: none;
+  border-radius: 8px;
+  background: rgba(14, 30, 64, 0.7);
+  color: #eaf1ff;
+  margin-bottom: 0.6rem;
+  outline: none;
+  transition: all 0.3s ease;
+}
+.group-input:focus {
+  background: rgba(25, 60, 120, 0.9);
+  box-shadow: 0 0 0 2px rgba(0, 150, 255, 0.4);
+}
+
+/* Member search list */
+.group-search-results {
+  max-height: 150px;
+  overflow-y: auto;
+  margin-bottom: 0.5rem;
+}
+.group-user-item {
+  padding: 0.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.group-user-item:hover {
+  background: rgba(0, 102, 204, 0.25);
+  transform: translateX(4px);
+}
+.group-user-item.selected {
+  background: linear-gradient(135deg, #007bff, #00bcd4);
+  color: #fff;
+  font-weight: 600;
+}
+
+/* Selected members chips */
+.selected-members {
+  margin-bottom: 0.6rem;
+}
+.member-chip {
+  display: inline-flex;
+  align-items: center;
+  background: rgba(30, 60, 120, 0.7);
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
+  margin: 0.2rem;
+  font-size: 0.85rem;
+  color: #dce3f2;
+}
+.member-chip .remove {
+  margin-left: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  color: #87cefa;
+  transition: color 0.2s ease;
+}
+.member-chip .remove:hover {
+  color: #00bfff;
+}
+
+/* Create Group button */
+.btn-create {
+  width: 100%;
+  background: linear-gradient(135deg, #00bcd4, #007bff);
+  border: none;
+  color: white;
+  padding: 0.7rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 10px rgba(0, 140, 255, 0.3);
+}
+.btn-create:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.btn-create:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 0 15px rgba(0, 140, 255, 0.6);
+}
+
+/* ==============================
+   ✨ Animations
+============================== */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

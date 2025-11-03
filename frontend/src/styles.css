@@ -1,1 +1,12 @@
 /* You can add global styles to this file, and also import other style files */
+
+
+
+html, body {
+  background: radial-gradient(circle at top right, #05122b, #010511 80%);
+   color: #eaf1ff;
+  height: 100%;
+  margin: 0;
+  overflow: hidden; /* Disable scroll */
+  font-family: 'Poppins', sans-serif;
+}

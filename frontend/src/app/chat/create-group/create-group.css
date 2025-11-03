@@ -1,130 +1,180 @@
-/* Center layout like login */
+/* 🌌 Container */
 .create-group-container {
   display: flex;
-  align-items: center;
   justify-content: center;
-  min-height: 100vh;
-  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-  font-family: "Segoe UI", sans-serif;
-  
+  align-items: center;
+  height: 100%;
+  padding: 1.5rem;
+  background: radial-gradient(circle at 20% 20%, #021028, #000915);
+  animation: fadeIn 0.8s ease-out;
 }
 
-/* Card style similar to login box */
+/* 🧩 Card */
 .form-card {
-  background: transparent;
-  
-  padding: 40px 35px;
-  border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
   width: 100%;
-  max-width: 400px;
-animation: fadeIn 0.4s ease-in-out;
+  max-width: 450px;
+  padding: 2rem;
+  background: rgba(0, 20, 50, 0.65);
+  backdrop-filter: blur(20px);
+  border-radius: 18px;
+  border: 1px solid rgba(0, 100, 255, 0.3);
+  box-shadow: 0 0 35px rgba(0, 120, 255, 0.18);
+  animation: slideUp 0.7s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* Title */
 .form-card h2 {
   text-align: center;
-  margin-bottom: 25px;
-  color: #f7efef;
-  font-weight: 600;
+  color: #cde8ff;
+  font-size: 1.4rem;
+  margin-bottom: 1.5rem;
+  text-shadow: 0 0 10px rgba(0, 180, 255, 0.5);
+}
+
+/* Input Groups */
+.form-group {
+  margin-bottom: 1rem;
+  animation: fadeSlideIn 0.8s ease;
+}
+
+label {
+  display: block;
+  margin-bottom: 0.4rem;
+  color: #7fb7ff;
+  font-size: 0.9rem;
   letter-spacing: 0.5px;
 }
 
-/* Form fields */
-.form-group {
-  margin-bottom: 18px;
-}
-
-.form-group label {
-  display: block;
-  margin-bottom: 6px;
-  color: #555;
-  font-size: 14px;
-  font-weight: 500;
-}
-
-.form-group input[type="text"] {
+/* 🔹 Text Input */
+input[type="text"] {
   width: 100%;
-  padding: 10px 12px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  font-size: 14px;
-  transition: border-color 0.2s;
-}
-
-.form-group input[type="text"]:focus {
+  padding: 0.8rem;
+  border-radius: 10px;
+  background: rgba(5, 40, 90, 0.8);
+  border: 1px solid rgba(0, 120, 255, 0.4);
+  color: #eaf3ff;
   outline: none;
-  border-color: #007bff;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
 }
 
-/* Members list */
+input[type="text"]:focus {
+  background: rgba(10, 60, 130, 0.95);
+  box-shadow: 0 0 12px rgba(0, 200, 255, 0.45);
+  border-color: #00baff;
+}
+
+/* ✅ Member List */
 .member-list {
-  max-height: 150px;
+  max-height: 180px;
   overflow-y: auto;
-  border: 1px solid #ddd;
+  padding: 0.4rem;
+  border-radius: 8px;
+  background: rgba(0, 15, 45, 0.7);
+  border: 1px solid rgba(0, 120, 255, 0.25);
+  transition: border-color 0.3s ease;
+}
+
+.member-list:hover {
+  border-color: rgba(0, 160, 255, 0.5);
+}
+
+.member-list::-webkit-scrollbar {
+  width: 6px;
+}
+.member-list::-webkit-scrollbar-thumb {
+  background: rgba(0, 140, 255, 0.4);
   border-radius: 6px;
-  background: #fafafa;
-  padding: 8px;
 }
 
 .member-item {
-  padding: 6px 0;
-  border-bottom: 1px solid #eee;
-  font-size: 14px;
-  color: #444;
+  color: #d3eaff;
+  padding: 0.35rem;
+  border-radius: 6px;
+  transition: background 0.25s ease, transform 0.2s ease;
 }
 
-.member-item:last-child {
-  border-bottom: none;
+.member-item:hover {
+  background: rgba(0, 40, 90, 0.65);
+  transform: scale(1.02);
 }
 
+/* Checkbox styling */
 .member-item input[type="checkbox"] {
-  margin-right: 6px;
+  accent-color: #00baff;
+  transform: scale(1.15);
+  margin-right: 8px;
+  cursor: pointer;
 }
 
-/* Button */
+/* 🔥 Animated Submit Button */
 button {
   width: 100%;
-  background: #007bff;
-  color: white;
+  padding: 0.85rem;
+  margin-top: 1rem;
+  font-size: 1rem;
+  font-weight: 600;
+  background: linear-gradient(135deg, #007bff, #00e5ff);
+  color: #fff;
+  border-radius: 10px;
   border: none;
-  padding: 10px;
-  font-size: 15px;
-  border-radius: 6px;
   cursor: pointer;
-  transition: background 0.3s ease;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  animation: pulseBtn 3s infinite ease-in-out;
 }
 
-button:hover {
-  background: #0056b3;
+button:hover:not([disabled]) {
+  transform: scale(1.05) translateY(-2px);
+  box-shadow: 0 0 25px rgba(0, 200, 255, 0.6);
 }
 
 button:disabled {
-  background: #aaa;
+  opacity: 0.6;
   cursor: not-allowed;
+  animation: none;
 }
 
-/* Error & success messages */
-.error-text {
-  color: #d9534f;
-  font-size: 13px;
-  margin-top: 4px;
-}
-
+/* ✅ Success Message */
 .success-text {
   text-align: center;
-  color: #28a745;
-  font-size: 14px;
-  margin-top: 15px;
+  font-size: 0.95rem;
+  color: #7dffb3;
+  margin-top: 1rem;
+  animation: fadeIn 0.7s ease;
 }
 
-/* Simple fade animation */
+/* ❌ Error */
+.error-text {
+  font-size: 0.85rem;
+  color: #ff8484;
+  margin-top: 0.2rem;
+  animation: fadeIn 0.3s ease;
+}
+
+/* ✨ Animations */
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(15px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+  from { opacity: 0 }
+  to { opacity: 1 }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px) }
+  to { opacity: 1; transform: translateY(0) }
+}
+
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateX(-10px) }
+  to { opacity: 1; transform: translateX(0) }
+}
+
+@keyframes pulseBtn {
+  0%, 100% { box-shadow: 0 0 10px rgba(0, 150, 255, 0.25) }
+  50% { box-shadow: 0 0 28px rgba(0, 220, 255, 0.65) }
+}
+
+/* 📱 Responsive */
+@media (max-width: 480px) {
+  .form-card {
+    padding: 1.4rem;
   }
 }
