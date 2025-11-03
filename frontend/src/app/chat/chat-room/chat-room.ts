@@ -23,6 +23,7 @@ export class ChatRoomComponent implements OnInit, OnDestroy {
   username: string | null = null;
   chatForm: FormGroup;
   private subs: Subscription[] = [];
+  private subscribedRoom: string | null = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -42,13 +43,9 @@ export class ChatRoomComponent implements OnInit, OnDestroy {
     console.log('[Init] Username:', this.username);
 
     const urlSegments = this.route.snapshot.url;
-    console.log('[Init] ActivatedRoute urlSegments:', urlSegments);
-
     if (urlSegments.length >= 3) {
       this.roomId = urlSegments[2].path;
       console.log('[Init] Detected Room mode, roomId:', this.roomId);
-    } else {
-      console.log('[Init] Not enough URL segments for roomId.');
     }
 
     let userParamRaw: string | null = null;
@@ -57,21 +54,21 @@ export class ChatRoomComponent implements OnInit, OnDestroy {
     } else if (this.route.snapshot.queryParamMap.has('userParam')) {
       userParamRaw = this.route.snapshot.queryParamMap.get('userParam');
     }
-    console.log('[Init] userParam:', userParamRaw);
 
     if (this.roomId) {
       this.isGroup = true;
       console.log('[Init] Mode: Group chat, roomId:', this.roomId);
+
       this.chatService.getRoomById(this.roomId).subscribe({
         next: (room) => {
           this.groupName = room?.name || 'Group Chat';
-          console.log('[Group info] Loaded:', this.groupName, room);
         },
         error: (err) => console.error('[Group info] Error:', err)
       });
+
       this.loadGroupMessages(this.roomId);
-      this.socket.subscribeToRoom(this.roomId);
-      console.log('[WebSocket] Subscribed to group room:', this.roomId);
+      this.subscribeToRoomOnce(this.roomId);
+
     } else if (userParamRaw && userParamRaw.trim().length > 0) {
       this.receiverUsername = userParamRaw.trim().toLowerCase();
       this.isGroup = false;
@@ -81,44 +78,43 @@ export class ChatRoomComponent implements OnInit, OnDestroy {
       console.warn('[Init] Unable to determine chat type (group/private). Check route params!');
     }
 
-    // Listen for real-time messages
+    // Listen for real-time messages only once
     const msgSub = this.socket.messages$.subscribe((msg: any) => {
-      console.log('[Socket] Message arrived:', msg);
-      if (!msg) {
-        console.warn('[Socket] Empty message received.');
-        return;
-      }
+      if (!msg) return;
 
       const sender = (msg.senderUsername || msg.sender || '').trim().toLowerCase();
       const receiver = (msg.receiverUsername || msg.receiver || '').trim().toLowerCase();
+
       const isGroupMsg = this.isGroup && msg.roomId === this.roomId;
       const isPrivateMsg =
         !this.isGroup &&
         ((sender === (this.receiverUsername || '').toLowerCase() && receiver === me) ||
           (sender === me && receiver === (this.receiverUsername || '').toLowerCase()));
 
-      console.log('[Socket] isGroupMsg:', isGroupMsg, 'isPrivateMsg:', isPrivateMsg);
-
       if (isGroupMsg || isPrivateMsg) {
+        // Avoid duplicates
+        const alreadyExists = this.messages.some(
+          (m) =>
+            (m.id && msg.id && m.id === msg.id) ||
+            (m.timestamp === msg.timestamp && m.senderUsername === msg.senderUsername)
+        );
+        if (alreadyExists) return;
+
         const displayMsg = {
           ...msg,
           senderDisplayName: sender === me ? 'You' : msg.senderUsername || msg.sender,
           isOwn: sender === me
         };
 
-        // Push the new message into the messages array
         this.messages.push(displayMsg);
         setTimeout(() => this.scrollToBottom(), 100);
-        console.log('[Socket] Message pushed:', displayMsg, 'Total messages:', this.messages.length);
       }
     });
     this.subs.push(msgSub);
-    console.log('[Init] Socket message subscription added.');
   }
 
   private loadGroupMessages(roomId: string) {
     const me = this.username?.toLowerCase() || '';
-    console.log('[GroupMessages] Loading for room:', roomId);
     this.chatService.getMessages(roomId).subscribe({
       next: (msgs) => {
         this.messages = (msgs || []).map((m: any) => {
@@ -130,7 +126,6 @@ export class ChatRoomComponent implements OnInit, OnDestroy {
           };
         });
         setTimeout(() => this.scrollToBottom(), 100);
-        console.log('[GroupMessages] Loaded messages:', this.messages.length, this.messages);
       },
       error: (err) => console.error('[GroupMessages] Error loading:', err)
     });
@@ -138,10 +133,8 @@ export class ChatRoomComponent implements OnInit, OnDestroy {
 
   private loadPrivateChat(otherUser: string) {
     const me = this.username?.toLowerCase() || '';
-    console.log('[PrivateChat] Loading for:', otherUser);
     this.chatService.getOrCreatePrivateChat(otherUser).subscribe({
       next: (res) => {
-        console.log('[PrivateChat] API response:', res);
         this.roomId = res.room.id;
         this.messages = (res.messages || []).map((m: any) => {
           const sender = (m.senderUsername || m.sender || '').trim().toLowerCase();
@@ -151,26 +144,30 @@ export class ChatRoomComponent implements OnInit, OnDestroy {
             isOwn: sender === me
           };
         });
-        this.socket.subscribeToRoom(this.roomId!);
+        this.subscribeToRoomOnce(this.roomId!);
         setTimeout(() => this.scrollToBottom(), 100);
-        console.log('[PrivateChat] Messages loaded:', this.messages.length, this.messages);
       },
       error: (err) => console.error('[PrivateChat] Error:', err)
     });
   }
 
-  sendMessage() {
-    const content = this.chatForm.value.content?.trim();
-    if (!content || !this.roomId) {
-      console.warn('[SendMessage] No content or roomId; aborting.');
+  private subscribeToRoomOnce(roomId: string) {
+    if (this.subscribedRoom === roomId) {
+      console.log('[Socket] Already subscribed to room:', roomId);
       return;
     }
+    this.socket.subscribeToRoom(roomId);
+    this.subscribedRoom = roomId;
+    console.log('[Socket] Subscribed to room:', roomId);
+  }
+
+  sendMessage() {
+    const content = this.chatForm.value.content?.trim();
+    if (!content || !this.roomId) return;
 
     if (this.isGroup) {
-      console.log('[SendMessage] To group:', this.roomId, 'content:', content);
       this.socket.sendMessage(this.roomId, content);
     } else {
-      console.log('[SendMessage] To user:', this.receiverUsername, 'room:', this.roomId, 'content:', content);
       this.socket.sendMessage(this.roomId, content, this.receiverUsername!);
     }
 
@@ -189,5 +186,6 @@ export class ChatRoomComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     console.log('[ngOnDestroy] Unsubscribing from', this.subs.length, 'subscriptions');
     this.subs.forEach((s) => s.unsubscribe());
+    this.subscribedRoom = null;
   }
 }
