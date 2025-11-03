@@ -37,7 +37,13 @@ export class ChatRoomComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.username = this.auth.getUsername()?.trim() || null;
+    // this.username = this.auth.getUsername()?.trim() || null;
+    
+    // do not change this part of code to access username from local storage
+    this.username = localStorage.getItem('username')
+
+    // further if the username is same as sender name, the display should be 'you' rather than the current username
+    
     const me = this.username?.toLowerCase() || '';
     console.log('[Init] Username:', this.username);
 
