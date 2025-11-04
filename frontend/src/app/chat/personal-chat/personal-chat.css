@@ -16,8 +16,11 @@
    💬 Header
 ======================================= */
 .chat-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 15px;
   padding: 1rem 1.5rem;
-  text-align: center;
   background: linear-gradient(90deg, rgba(0, 45, 100, 0.9), rgba(0, 25, 65, 0.9));
   border-bottom: 1px solid rgba(0, 120, 255, 0.25);
   box-shadow: 0 2px 10px rgba(0, 120, 255, 0.25);
@@ -31,7 +34,52 @@
   letter-spacing: 0.5px;
   text-shadow: 0 0 10px rgba(0, 200, 255, 0.6);
   animation: fadeSlideDown 0.6s ease;
+  flex: 1;
+  text-align: center;
 }
+
+/* 🔙 Back Button */
+/* 🔙 Back Button (Arrow Only) */
+.back-btn {
+  position: relative;
+  width: 38px;
+  height: 38px;
+  border: 1px solid rgba(0, 200, 255, 0.4);
+  border-radius: 10px;
+  background: rgba(0, 120, 255, 0.15);
+  color: #eaf7ff;
+  cursor: pointer;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 10px rgba(0, 180, 255, 0.25);
+  transition: all 0.25s ease;
+}
+
+.back-btn::before {
+  content: "←";
+  font-size: 1.2rem;
+  color: #cdefff;
+  transition: transform 0.25s ease, color 0.25s ease;
+}
+
+.back-btn:hover {
+  background: rgba(0, 200, 255, 0.25);
+  box-shadow: 0 0 20px rgba(0, 220, 255, 0.45);
+  transform: translateY(-1px);
+}
+
+.back-btn:hover::before {
+  color: #00e5ff;
+  transform: translateX(-2px);
+}
+
+.back-btn:focus {
+  outline: none;
+  box-shadow: 0 0 25px rgba(0, 220, 255, 0.6);
+}
+
 
 /* =======================================
    💭 Chat Messages
@@ -66,11 +114,9 @@
   animation: messageAppear 0.35s ease-out;
   transition: all 0.3s ease;
 }
-
 .own-row {
   align-items: flex-end;
 }
-
 .other-row {
   align-items: flex-start;
 }
@@ -87,12 +133,11 @@
   backdrop-filter: blur(12px);
   transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
-
 .message-bubble:hover {
   transform: scale(1.03);
 }
 
-/* Own message (right side) */
+/* Own message */
 .message-own {
   background: linear-gradient(135deg, #001711, #01161a);
   color: #fff;
@@ -101,7 +146,7 @@
   animation: popUpRight 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Other message (left side) */
+/* Other message */
 .message-other {
   background: rgba(10, 35, 90, 0.8);
   border-bottom-left-radius: 5px;
@@ -145,7 +190,6 @@
   border-top: 1px solid rgba(0, 140, 255, 0.25);
   box-shadow: 0 -2px 12px rgba(0, 120, 255, 0.15);
 }
-
 .chat-input-container input {
   flex: 1;
   padding: 0.9rem 1.1rem;
@@ -157,12 +201,10 @@
   font-size: 0.95rem;
   transition: all 0.3s ease;
 }
-
 .chat-input-container input:focus {
   background: rgba(15, 55, 120, 0.95);
   box-shadow: 0 0 8px rgba(0, 160, 255, 0.4);
 }
-
 .chat-input-container button {
   margin-left: 1rem;
   padding: 0.8rem 1.4rem;
@@ -175,12 +217,10 @@
   transition: transform 0.25s ease, box-shadow 0.25s ease;
   animation: pulseBtn 3s infinite ease-in-out;
 }
-
 .chat-input-container button:hover {
   transform: scale(1.05) translateY(-2px);
   box-shadow: 0 0 25px rgba(0, 200, 255, 0.6);
 }
-
 .chat-input-container button:disabled {
   opacity: 0.6;
   cursor: not-allowed;
@@ -194,32 +234,26 @@
   from { opacity: 0; }
   to { opacity: 1; }
 }
-
 @keyframes fadeSlideUp {
   from { opacity: 0; transform: translateY(15px); }
   to { opacity: 1; transform: translateY(0); }
 }
-
 @keyframes fadeSlideDown {
   from { opacity: 0; transform: translateY(-10px); }
   to { opacity: 1; transform: translateY(0); }
 }
-
 @keyframes popUpRight {
   0% { transform: translateX(20px) scale(0.95); opacity: 0; }
   100% { transform: translateX(0) scale(1); opacity: 1; }
 }
-
 @keyframes popUpLeft {
   0% { transform: translateX(-20px) scale(0.95); opacity: 0; }
   100% { transform: translateX(0) scale(1); opacity: 1; }
 }
-
 @keyframes pulseBtn {
   0%, 100% { box-shadow: 0 0 8px rgba(0, 150, 255, 0.25); }
   50% { box-shadow: 0 0 20px rgba(0, 220, 255, 0.6); }
 }
-
 @keyframes messageAppear {
   0% { opacity: 0; transform: translateY(10px); }
   100% { opacity: 1; transform: translateY(0); }
@@ -229,13 +263,29 @@
    📱 Responsive
 ======================================= */
 @media (max-width: 600px) {
+  .chat-header {
+    gap: 8px;
+    padding: 0.8rem 1rem;
+  }
+
+  .back-btn {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.9rem;
+  }
+
+  .chat-header h3 {
+    font-size: 1rem;
+  }
+
   .message-bubble {
     max-width: 85%;
     font-size: 0.9rem;
   }
+
   .chat-input-container input {
     padding: 0.75rem;
   }
+
   .chat-input-container button {
     padding: 0.7rem 1.1rem;
   }

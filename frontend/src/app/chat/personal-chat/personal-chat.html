@@ -1,26 +1,21 @@
 <div class="chat-room-container">
   <!-- 💬 Chat Header -->
   <div class="chat-header">
-    <h3> {{ receiverUsername }}</h3>
+    <button class="back-btn" (click)="goBack()" aria-label="Go back"></button>
+    <h3>{{ receiverUsername }}</h3>
   </div>
+
 
   <!-- 💭 Chat Messages -->
   <div class="chat-messages">
-    <div
-      *ngFor="let msg of messages"
-      class="message-row"
-      [ngClass]="{
+    <div *ngFor="let msg of messages" class="message-row" [ngClass]="{
         'own-row': msg.senderDisplayName === 'You',
         'other-row': msg.senderDisplayName !== 'You'
-      }"
-    >
-      <div
-        [ngClass]="{
+      }">
+      <div [ngClass]="{
           'message-own': msg.senderDisplayName === 'You',
           'message-other': msg.senderDisplayName !== 'You'
-        }"
-        class="message-bubble"
-      >
+        }" class="message-bubble">
         <!-- 👤 Sender Name -->
         <div class="sender">{{ msg.senderDisplayName }}</div>
 
@@ -34,17 +29,8 @@
   </div>
 
   <!-- 📝 Chat Input -->
-  <form
-    class="chat-input-container"
-    [formGroup]="chatForm"
-    (ngSubmit)="sendMessage()"
-  >
-    <input
-      formControlName="content"
-      type="text"
-      placeholder="Type a message..."
-      autocomplete="off"
-    />
+  <form class="chat-input-container" [formGroup]="chatForm" (ngSubmit)="sendMessage()">
+    <input formControlName="content" type="text" placeholder="Type a message..." autocomplete="off" />
     <button type="submit" [disabled]="!chatForm.value.content?.trim()">
       Send
     </button>

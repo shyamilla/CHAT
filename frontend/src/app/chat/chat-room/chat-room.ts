@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { ChatService } from '../../core/services/chat.service';
@@ -30,7 +30,8 @@ export class ChatRoomComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private chatService: ChatService,
     private socket: WsService,
-    private auth: AuthService
+    private auth: AuthService,
+    private router: Router,      // ✅ must inject Router here
   ) {
     this.chatForm = this.fb.group({
       content: ['']
@@ -181,6 +182,11 @@ export class ChatRoomComponent implements OnInit, OnDestroy {
 
   trackByMessage(index: number, msg: any): string {
     return msg.id || index.toString();
+  }
+
+
+   goBack() {
+    this.router.navigate(['/chats']); // 👈 navigate back to chat list
   }
 
   ngOnDestroy() {

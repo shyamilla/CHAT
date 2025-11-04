@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { ChatService } from '../../core/services/chat.service';
@@ -28,7 +28,8 @@ export class PersonalChatComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private chatService: ChatService,
     private ws: WsService,
-    private auth: AuthService
+    private auth: AuthService,
+    private router: Router
   ) {
     this.chatForm = this.fb.group({
       content: [''],
@@ -221,6 +222,12 @@ export class PersonalChatComponent implements OnInit, OnDestroy {
     const el = document.querySelector('.chat-messages');
     if (el) el.scrollTop = el.scrollHeight;
   }
+
+
+   goBack() {
+    this.router.navigate(['/chats']); // 👈 navigate back to chat list
+  }
+
 
   ngOnDestroy() {
     this.subs.forEach((s) => s.unsubscribe());

@@ -30,12 +30,32 @@
 ============================== */
 .chat-header {
   z-index: 1;
-  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
   padding: 1rem 1.5rem;
   background: linear-gradient(90deg, rgba(0, 40, 90, 0.9), rgba(0, 25, 65, 0.95));
   box-shadow: 0 2px 16px rgba(0, 150, 255, 0.2);
   border-bottom: 1px solid rgba(0, 150, 255, 0.3);
 }
+
+.header-left {
+  flex: 0 0 auto;
+}
+
+.header-title {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  flex: 1;
+  text-align: center;
+}
+
+.header-right {
+  flex: 0 0 40px; /* keeps space balanced */
+}
+
 .chat-header h2 {
   margin: 0;
   font-size: 1.25rem;
@@ -43,6 +63,63 @@
   color: #cde8ff;
   text-shadow: 0 0 8px rgba(0, 170, 255, 0.8);
   animation: fadeSlideIn 0.7s ease;
+}
+
+/* 🔙 Back Button Enhancement */
+/* 🔙 Back Button (Arrow Only) */
+.back-btn {
+  position: relative;
+  width: 38px;
+  height: 38px;
+  border: 1px solid rgba(0, 200, 255, 0.4);
+  border-radius: 10px;
+  background: rgba(0, 120, 255, 0.15);
+  color: #eaf7ff;
+  cursor: pointer;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 10px rgba(0, 180, 255, 0.25);
+  transition: all 0.25s ease;
+}
+
+.back-btn::before {
+  content: "←";
+  font-size: 1.2rem;
+  color: #cdefff;
+  transition: transform 0.25s ease, color 0.25s ease;
+}
+
+.back-btn:hover {
+  background: rgba(0, 200, 255, 0.25);
+  box-shadow: 0 0 20px rgba(0, 220, 255, 0.45);
+  transform: translateY(-1px);
+}
+
+.back-btn:hover::before {
+  color: #00e5ff;
+  transform: translateX(-2px);
+}
+
+.back-btn:focus {
+  outline: none;
+  box-shadow: 0 0 25px rgba(0, 220, 255, 0.6);
+}
+
+
+/* Optional glow pulse for focus */
+@keyframes backBtnPulse {
+  0%, 100% {
+    text-shadow: 0 0 8px rgba(0, 180, 255, 0.4);
+  }
+  50% {
+    text-shadow: 0 0 16px rgba(0, 220, 255, 0.8);
+  }
+}
+.back-btn:focus {
+  outline: none;
+  animation: backBtnPulse 2s infinite ease-in-out;
 }
 
 /* ==============================
@@ -251,5 +328,8 @@
     width: 42px;
     height: 42px;
     font-size: 1.1rem;
+  }
+  .back-btn {
+    font-size: 0.9rem;
   }
 }

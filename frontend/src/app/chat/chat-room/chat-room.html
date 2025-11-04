@@ -1,8 +1,14 @@
 <div class="chat-room-container">
   <!-- 🧩 Chat Header -->
   <div class="chat-header">
-    <h2 *ngIf="isGroup">{{ groupName }}</h2>
-    <h2 *ngIf="!isGroup">{{ receiverUsername }}</h2>
+    <div class="header-left">
+      <button class="back-btn" (click)="goBack()"></button>
+    </div>
+    <div class="header-title">
+      <h2 *ngIf="isGroup">{{ groupName }}</h2>
+      <h2 *ngIf="!isGroup">{{ receiverUsername }}</h2>
+    </div>
+    <div class="header-right"></div>
   </div>
 
   <!-- 💬 Chat Messages -->
@@ -12,15 +18,9 @@
       class="message-bubble"
       [ngClass]="{ own: msg.isOwn, other: !msg.isOwn }"
     >
-      <div class="sender-name">
-        {{ msg.senderDisplayName }}
-      </div>
-      <div class="message-content">
-        {{ msg.content }}
-      </div>
-      <div class="timestamp">
-        {{ msg.timestamp | date: 'shortTime' }}
-      </div>
+      <div class="sender-name">{{ msg.senderDisplayName }}</div>
+      <div class="message-content">{{ msg.content }}</div>
+      <div class="timestamp">{{ msg.timestamp | date: 'shortTime' }}</div>
     </div>
   </div>
 
@@ -33,7 +33,11 @@
       class="input-box"
       autocomplete="off"
     />
-    <button type="submit" class="send-btn" [disabled]="!chatForm.value.content?.trim()">
+    <button
+      type="submit"
+      class="send-btn"
+      [disabled]="!chatForm.value.content?.trim()"
+    >
       ➤
     </button>
   </form>
